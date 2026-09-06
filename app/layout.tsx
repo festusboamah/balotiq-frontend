@@ -1,15 +1,18 @@
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const frauncesHeading = Fraunces({
   subsets: ["latin"],
+  variable: "--font-heading",
+  weight: ["500", "600", "700", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["500", "600", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -21,7 +24,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn(
+        "h-full",
+        "antialiased",
+        "font-sans",
+        outfit.variable,
+        frauncesHeading.variable,
+      )}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
