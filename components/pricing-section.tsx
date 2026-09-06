@@ -29,8 +29,8 @@ const plans: Plan[] = [
     name: "Starter",
     info: "For small teams and community elections",
     price: {
-      monthly: 29,
-      yearly: 24,
+      monthly: 450,
+      yearly: 350,
     },
     features: [
       "Up to 250 voters",
@@ -44,7 +44,7 @@ const plans: Plan[] = [
     ],
     btn: {
       text: "Start your election",
-      href: "#",
+      href: "https://balotiq.com/register",
     },
   },
   {
@@ -52,8 +52,8 @@ const plans: Plan[] = [
     name: "Professional",
     info: "For organisations running regular elections",
     price: {
-      monthly: 79,
-      yearly: 65,
+      monthly: 1200,
+      yearly: 950,
     },
     features: [
       "Up to 2,500 voters",
@@ -68,15 +68,15 @@ const plans: Plan[] = [
     ],
     btn: {
       text: "Get started",
-      href: "#",
+      href: "https://balotiq.com/register",
     },
   },
   {
     name: "Organisation",
     info: "For large institutions and associations",
     price: {
-      monthly: 199,
-      yearly: 165,
+      monthly: 3000,
+      yearly: 2500,
     },
     features: [
       "Up to 10,000 voters",
@@ -92,7 +92,7 @@ const plans: Plan[] = [
     ],
     btn: {
       text: "Talk to our team",
-      href: "#",
+      href: "mailto:support@balotiq.com",
     },
   },
 ];
@@ -279,7 +279,7 @@ export function PricingCard({
             className="font-heading font-extrabold text-4xl tracking-tight text-foreground [&::part(suffix)]:font-normal [&::part(suffix)]:text-sm [&::part(suffix)]:text-muted-foreground"
             format={{
               style: "currency",
-              currency: "USD",
+              currency: "GHS",
               notation: "compact",
             }}
             suffix="/month"

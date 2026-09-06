@@ -65,10 +65,19 @@ export function HeroSection() {
         </p>
 
         <div className="fade-in slide-in-from-bottom-10 flex w-fit animate-in items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            render={
+              <a href="mailto:support@balotiq.com?subject=Demo%20request" />
+            }
+            nativeButton={false}
+          >
             <PhoneCallIcon data-icon="inline-start" /> Request A Demo
           </Button>
-          <Button>
+          <Button
+            render={<a href="https://balotiq.com/register" />}
+            nativeButton={false}
+          >
             Get started <ArrowRightIcon data-icon="inline-end" />
           </Button>
         </div>

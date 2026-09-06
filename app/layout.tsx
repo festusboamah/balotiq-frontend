@@ -1,20 +1,14 @@
 import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Fraunces, Outfit } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 
-const frauncesHeading = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["500", "600", "700", "900"],
-});
-
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["500", "600", "700", "900"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const description =
@@ -58,13 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn(
-        "h-full",
-        "antialiased",
-        "font-sans",
-        outfit.variable,
-        frauncesHeading.variable,
-      )}
+      className={cn("h-full", "antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Header />
