@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { GithubIcon } from "@/components/github-icon";
-import { InstagramIcon } from "@/components/instagram-icon";
-import { XIcon } from "@/components/x-icon";
+// import { GithubIcon } from "@/components/github-icon";
+// import { InstagramIcon } from "@/components/instagram-icon";
+// import { XIcon } from "@/components/x-icon";
 import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 import { FullWidthDivider } from "@/components/full-width-divider";
 
 export function Footer() {
@@ -16,17 +16,18 @@ export function Footer() {
     >
       <FullWidthDivider position="top" />
 
-      <div className="grid max-w-5xl grid-cols-6 gap-6 p-4">
+      <div className="grid grid-cols-6 gap-6 p-4">
         {/* Brand */}
-        <div className="col-span-6 flex flex-col gap-4 pt-5 md:col-span-4">
-          <a className="w-max" href="#">
+        <div className="col-span-6 flex flex-col gap-4 pt-5">
+          <Link className="w-max" href="/">
             <Logo className="h-5" />
-          </a>
+          </Link>
 
           <p className="max-w-sm text-balance text-muted-foreground text-sm">
             Secure, transparent, and verifiable elections made simple.
           </p>
 
+          {/* Social links, temporarily disabled until real accounts exist
           <div className="flex gap-2">
             {socialLinks.map((item, index) => (
               <Button
@@ -40,11 +41,15 @@ export function Footer() {
               </Button>
             ))}
           </div>
+          */}
         </div>
 
         {/* Navigation */}
-        <div className="col-span-3 w-full md:col-span-2">
-          <div className="mt-2 grid grid-cols-1 lg:grid-cols-3 gap-2">
+        <div className="col-span-3 w-full sm:col-span-2">
+          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-[0.14em]">
+            Navigation
+          </p>
+          <div className="mt-3 flex flex-col items-start gap-2.5">
             {navLinks.map(({ href, label }) => (
               <a
                 className="w-max text-sm hover:underline"
@@ -56,13 +61,59 @@ export function Footer() {
             ))}
           </div>
         </div>
+
+        {/* Legal */}
+        <div className="col-span-3 w-full sm:col-span-2">
+          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-[0.14em]">
+            Legal
+          </p>
+          <div className="mt-3 flex flex-col items-start gap-2.5">
+            {legalLinks.map(({ href, label }) => (
+              <a
+                className="w-max text-sm hover:underline"
+                href={href}
+                key={label}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Support */}
+        <div className="col-span-6 w-full sm:col-span-2">
+          <p className="text-muted-foreground text-xs font-semibold uppercase tracking-[0.14em]">
+            Support
+          </p>
+          <a
+            className="mt-3 inline-block text-sm font-medium hover:underline"
+            href="mailto:support@balotiq.com"
+          >
+            support@balotiq.com
+          </a>
+          <p className="mt-2 max-w-xs text-muted-foreground text-xs leading-5">
+            Questions about an election or Engage event? We&apos;re here to
+            help.
+          </p>
+        </div>
       </div>
 
       <FullWidthDivider />
 
-      <div className="flex items-center justify-center gap-2 py-4">
+      <div className="flex flex-col items-center justify-center gap-1.5 py-4 sm:flex-row sm:justify-between sm:px-4">
         <p className="text-center font-light text-muted-foreground text-sm">
           &copy; {new Date().getFullYear()} Balotiq, All rights reserved
+        </p>
+        <p className="text-center font-light text-muted-foreground text-sm">
+          A product by{" "}
+          <a
+            className="font-medium text-foreground hover:underline"
+            href="https://nerdsiv.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nerds IV Technologies
+          </a>
         </p>
       </div>
     </footer>
@@ -83,38 +134,49 @@ const navLinks = [
     href: "/engage",
   },
   {
+    label: "Ticketing",
+    href: "/ticketing",
+  },
+  {
     label: "Features",
-    href: "#features",
+    href: "/#features",
   },
   {
     label: "Pricing",
-    href: "#pricing",
+    href: "/#pricing",
   },
   {
     label: "About",
     href: "/about",
   },
+];
+
+const legalLinks = [
   {
     label: "Privacy Policy",
-    href: "/privacy",
+    href: "https://balotiq.com/privacy",
   },
   {
-    label: "Terms & Conditions",
-    href: "/terms",
+    label: "Terms of Service",
+    href: "https://balotiq.com/terms",
+  },
+  {
+    label: "Billing & Refunds",
+    href: "https://balotiq.com/billing-policy",
   },
 ];
 
-const socialLinks = [
-  {
-    icon: <GithubIcon />,
-    link: "#",
-  },
-  {
-    icon: <InstagramIcon />,
-    link: "#",
-  },
-  {
-    icon: <XIcon />,
-    link: "#",
-  },
-];
+// const socialLinks = [
+//   {
+//     icon: <GithubIcon />,
+//     link: "#",
+//   },
+//   {
+//     icon: <InstagramIcon />,
+//     link: "#",
+//   },
+//   {
+//     icon: <XIcon />,
+//     link: "#",
+//   },
+// ];

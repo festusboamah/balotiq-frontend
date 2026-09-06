@@ -19,6 +19,10 @@ export const navLinks = [
     href: "/engage",
   },
   {
+    label: "Ticketing",
+    href: "/ticketing",
+  },
+  {
     label: "Features",
     href: "#features",
   },
@@ -40,7 +44,7 @@ export function Header() {
       className={cn(
         "sticky top-0 z-50 mx-auto w-full max-w-4xl border-transparent border-b md:rounded-md md:border md:transition-all md:ease-out",
         {
-          "border-border bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/50 md:top-2 md:max-w-3xl md:shadow":
+          "border-border bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/50 md:top-2 md:max-w-4xl md:shadow":
             scrolled,
         },
       )}
@@ -49,7 +53,7 @@ export function Header() {
         className={cn(
           "flex h-14 w-full items-center justify-between px-4 md:h-12 md:transition-all md:ease-out",
           {
-            "md:px-2": scrolled,
+            "md:px-3": scrolled,
           },
         )}
       >
@@ -73,10 +77,21 @@ export function Header() {
               </Button>
             ))}
           </div>
-          <Button size="sm" variant="outline">
+          <Button
+            size="sm"
+            variant="outline"
+            render={<a href="https://balotiq.com/login" />}
+            nativeButton={false}
+          >
             Sign In
           </Button>
-          <Button size="sm">Get Started</Button>
+          <Button
+            size="sm"
+            render={<a href="https://balotiq.com/register" />}
+            nativeButton={false}
+          >
+            Get Started
+          </Button>
         </div>
         <MobileNav />
       </nav>

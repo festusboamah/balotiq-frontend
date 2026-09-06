@@ -170,7 +170,12 @@ export function CallToAction() {
                 transition={{ duration: 0.6, delay: 0.32 }}
                 className="mt-7 space-y-3"
               >
-                <Button size="lg" className="group h-12 w-full">
+                <Button
+                  size="lg"
+                  className="group h-12 w-full"
+                  render={<a href="https://balotiq.com/register" />}
+                  nativeButton={false}
+                >
                   Start Your Election
                   <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
@@ -179,6 +184,10 @@ export function CallToAction() {
                   size="lg"
                   variant="outline"
                   className="h-12 w-full border-foreground/15 bg-transparent"
+                  render={
+                    <a href="mailto:support@balotiq.com?subject=Sales%20inquiry" />
+                  }
+                  nativeButton={false}
                 >
                   Contact Sales
                 </Button>

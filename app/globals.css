@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-heading);
+  --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,73 +48,75 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Balotiq brand palette, matching the real app's tokens (frontend/src/app/globals.css:
+   ink, paper, brass). Brass is a sparing accent, never a general background. */
 :root {
-  --background: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --card: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --card-foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --popover: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --popover-foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --primary: oklch(0.538 0.159 31.217); /* #B8402E */
-  --primary-foreground: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --secondary: oklch(0.187 0.011 60.681); /* #17120E */
-  --secondary-foreground: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --muted: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --muted-foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --accent: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --accent-foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --destructive: oklch(0.538 0.159 31.217); /* #B8402E */
-  --border: oklch(0.187 0.011 60.681); /* #17120E */
-  --input: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --ring: oklch(0.538 0.159 31.217); /* #B8402E */
-  --chart-1: oklch(0.538 0.159 31.217); /* #B8402E */
-  --chart-2: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --chart-3: oklch(0.187 0.011 60.681); /* #17120E */
-  --chart-4: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --chart-5: oklch(0.538 0.159 31.217); /* #B8402E */
+  --background: #f6f7f9; /* app bg */
+  --foreground: #121a2e; /* ink */
+  --card: #ffffff; /* surface */
+  --card-foreground: #121a2e; /* ink */
+  --popover: #ffffff; /* surface */
+  --popover-foreground: #121a2e; /* ink */
+  --primary: #121a2e; /* ink */
+  --primary-foreground: #e7ebec; /* paper */
+  --secondary: #eef1f4; /* surface-subtle */
+  --secondary-foreground: #121a2e; /* ink */
+  --muted: #eef1f4; /* surface-subtle */
+  --muted-foreground: #5b6472;
+  --accent: #b98a3a; /* brass */
+  --accent-foreground: #121a2e; /* ink */
+  --destructive: #dc2626;
+  --border: #121a2e; /* ink */
+  --input: #ffffff; /* surface */
+  --ring: #b98a3a; /* brass */
+  --chart-1: #121a2e; /* ink */
+  --chart-2: #b98a3a; /* brass */
+  --chart-3: #d9ac5c; /* brass-bright */
+  --chart-4: #5b6472;
+  --chart-5: #eef1f4; /* surface-subtle */
   --radius: 0.625rem;
-  --sidebar: oklch(0.187 0.011 60.681); /* #17120E */
-  --sidebar-foreground: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --sidebar-primary: oklch(0.538 0.159 31.217); /* #B8402E */
-  --sidebar-primary-foreground: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --sidebar-accent: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --sidebar-accent-foreground: oklch(0.187 0.011 60.681); /* #17120E */
-  --sidebar-border: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --sidebar-ring: oklch(0.538 0.159 31.217); /* #B8402E */
+  --sidebar: #121a2e; /* ink */
+  --sidebar-foreground: #e7ebec; /* paper */
+  --sidebar-primary: #b98a3a; /* brass */
+  --sidebar-primary-foreground: #121a2e; /* ink */
+  --sidebar-accent: #d9ac5c; /* brass-bright */
+  --sidebar-accent-foreground: #121a2e; /* ink */
+  --sidebar-border: rgba(231, 235, 236, 0.15);
+  --sidebar-ring: #b98a3a; /* brass */
 }
 
 .dark {
-  --background: oklch(0.187 0.011 60.681); /* #17120E */
-  --foreground: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --card: oklch(0.187 0.011 60.681);
-  --card-foreground: oklch(0.936 0.019 72.569);
-  --popover: oklch(0.187 0.011 60.681);
-  --popover-foreground: oklch(0.936 0.019 72.569);
-  --primary: oklch(0.538 0.159 31.217); /* #B8402E */
-  --primary-foreground: oklch(0.936 0.019 72.569);
-  --secondary: oklch(0.936 0.019 72.569); /* #F2E8DC */
-  --secondary-foreground: oklch(0.187 0.011 60.681);
-  --muted: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --muted-foreground: oklch(0.187 0.011 60.681);
-  --accent: oklch(0.768 0.146 67.927); /* #F0A03C */
-  --accent-foreground: oklch(0.187 0.011 60.681);
-  --destructive: oklch(0.538 0.159 31.217);
-  --border: oklch(0.936 0.019 72.569);
-  --input: oklch(0.187 0.011 60.681);
-  --ring: oklch(0.768 0.146 67.927);
-  --chart-1: oklch(0.538 0.159 31.217);
-  --chart-2: oklch(0.768 0.146 67.927);
-  --chart-3: oklch(0.936 0.019 72.569);
-  --chart-4: oklch(0.187 0.011 60.681);
-  --chart-5: oklch(0.538 0.159 31.217);
-  --sidebar: oklch(0.187 0.011 60.681);
-  --sidebar-foreground: oklch(0.936 0.019 72.569);
-  --sidebar-primary: oklch(0.538 0.159 31.217);
-  --sidebar-primary-foreground: oklch(0.936 0.019 72.569);
-  --sidebar-accent: oklch(0.768 0.146 67.927);
-  --sidebar-accent-foreground: oklch(0.187 0.011 60.681);
-  --sidebar-border: oklch(0.768 0.146 67.927);
-  --sidebar-ring: oklch(0.538 0.159 31.217);
+  --background: #0b0f1a; /* ink-dark */
+  --foreground: #e7ebec; /* paper */
+  --card: #111827; /* dark surface */
+  --card-foreground: #e7ebec; /* paper */
+  --popover: #111827; /* dark surface */
+  --popover-foreground: #e7ebec; /* paper */
+  --primary: #e7ebec; /* paper */
+  --primary-foreground: #121a2e; /* ink */
+  --secondary: #172033; /* dark surface-subtle */
+  --secondary-foreground: #e7ebec; /* paper */
+  --muted: #172033; /* dark surface-subtle */
+  --muted-foreground: #a7adba;
+  --accent: #d9ac5c; /* brass-bright, more contrast on dark */
+  --accent-foreground: #121a2e; /* ink */
+  --destructive: #f87171;
+  --border: #e7ebec; /* paper */
+  --input: #111827; /* dark surface */
+  --ring: #d9ac5c; /* brass-bright */
+  --chart-1: #e7ebec; /* paper */
+  --chart-2: #d9ac5c; /* brass-bright */
+  --chart-3: #b98a3a; /* brass */
+  --chart-4: #a7adba;
+  --chart-5: #172033; /* dark surface-subtle */
+  --sidebar: #0b0f1a; /* ink-dark */
+  --sidebar-foreground: #e7ebec; /* paper */
+  --sidebar-primary: #d9ac5c; /* brass-bright */
+  --sidebar-primary-foreground: #121a2e; /* ink */
+  --sidebar-accent: #b98a3a; /* brass */
+  --sidebar-accent-foreground: #121a2e; /* ink */
+  --sidebar-border: rgba(231, 235, 236, 0.12);
+  --sidebar-ring: #d9ac5c; /* brass-bright */
 }
 
 @layer base {

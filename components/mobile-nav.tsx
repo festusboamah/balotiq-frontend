@@ -41,10 +41,21 @@ export function MobileNav() {
 							))}
 						</div>
 						<div className="mt-12 flex flex-col gap-2">
-							<Button className="w-full" variant="outline">
+							<Button
+								className="w-full"
+								variant="outline"
+								render={<a href="https://balotiq.com/login" />}
+								nativeButton={false}
+							>
 								Sign In
 							</Button>
-							<Button className="w-full">Get Started</Button>
+							<Button
+								className="w-full"
+								render={<a href="https://balotiq.com/register" />}
+								nativeButton={false}
+							>
+								Get Started
+							</Button>
 						</div>
 					</div>
 				</Portal>
