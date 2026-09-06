@@ -1,8 +1,9 @@
+import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
-import HomeHeader from "@/components/home/home-header";
+import { Footer } from "@/components/footer";
 
 const frauncesHeading = Fraunces({
   subsets: ["latin"],
@@ -65,10 +66,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         frauncesHeading.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
-        <HomeHeader />
+      <body className="min-h-full flex flex-col overflow-x-hidden">
+        <Header />
 
         {children}
+        <Footer />
       </body>
     </html>
   );

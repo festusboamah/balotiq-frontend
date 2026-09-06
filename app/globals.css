@@ -123,10 +123,33 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-muted text-foreground;
   }
 
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -7,6 +7,10 @@ import { MobileNav } from "@/components/mobile-nav";
 
 export const navLinks = [
   {
+    label: "Home",
+    href: "/",
+  },
+  {
     label: "Governance",
     href: "/governance",
   },
@@ -16,11 +20,11 @@ export const navLinks = [
   },
   {
     label: "Features",
-    href: "/features",
+    href: "#features",
   },
   {
     label: "Pricing",
-    href: "/pricing",
+    href: "#pricing",
   },
   {
     label: "About",
@@ -53,7 +57,7 @@ export function Header() {
           className="rounded-md p-2 hover:bg-muted dark:hover:bg-muted/50"
           href="#"
         >
-          <Logo />
+          <Logo className="h-4" />
         </a>
         <div className="hidden items-center gap-2 md:flex">
           <div>
