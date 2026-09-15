@@ -95,7 +95,7 @@ export default function AboutPage() {
             Balotiq is an early stage platform, actively being built out.
             We&apos;d rather be upfront about that than oversell it. See
             our{" "}
-            <a className="text-primary underline underline-offset-4" href="https://balotiq.com/terms">
+            <a className="text-primary underline underline-offset-4" href="/terms">
               Terms of Service
             </a>{" "}
             for what that means in practice.
