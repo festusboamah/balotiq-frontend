@@ -1,109 +1,46 @@
-import { cn } from "@/lib/utils";
-import { DecorIcon } from "@/components/decor-icon";
+import { InfiniteSlider } from "@/components/infinite-slider";
 
 type Logo = {
   src: string;
   alt: string;
 };
 
+const logos: Logo[] = [
+  { src: "/logos/dambai-college-of-education.png", alt: "Dambai College of Education" },
+  { src: "/logos/peki-college-of-education.jpg", alt: "Peki College of Education" },
+  { src: "/logos/st-francis-college-of-education.jpg", alt: "St. Francis College of Education" },
+  { src: "/logos/ghana-national-association-of-teachers.jpg", alt: "Ghana National Association of Teachers" },
+  { src: "/logos/teachers-weekly-insider.jpg", alt: "Teachers Weekly Insider" },
+  { src: "/logos/stars-awards.jpg", alt: "Stars Awards" },
+  { src: "/logos/233-awards.svg", alt: "233 Awards" },
+  { src: "/logos/233-events.svg", alt: "233 Events" },
+  { src: "/logos/volta-campus-icons.svg", alt: "Volta Campus Icons" },
+  { src: "/logos/volta-impact-awards.svg", alt: "Volta Impact Awards" },
+  { src: "/logos/nerds-iv-technologies.jpg", alt: "Nerds IV Technologies" },
+];
+
 export function LogoCloud() {
   return (
-    <div className="grid grid-cols-2 border md:grid-cols-4">
-      <LogoCard
-        className="relative border-r border-b bg-primary-foreground dark:bg-secondary/30"
-        logo={{
-          src: "https://storage.efferd.com/logo/nvidia-wordmark.svg",
-          alt: "Nvidia Logo",
-        }}
+    <div className="py-4">
+      <InfiniteSlider
+        className="mask-[linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]"
+        gap={16}
+        speed={40}
+        speedOnHover={15}
       >
-        <DecorIcon className="z-10" position="bottom-right" />
-      </LogoCard>
-
-      <LogoCard
-        className="border-b md:border-r"
-        logo={{
-          src: "https://storage.efferd.com/logo/supabase-wordmark.svg",
-          alt: "Supabase Logo",
-        }}
-      />
-
-      <LogoCard
-        className="relative border-r border-b md:bg-primary-foreground dark:md:bg-secondary/30"
-        logo={{
-          src: "https://storage.efferd.com/logo/github-wordmark.svg",
-          alt: "GitHub Logo",
-        }}
-      >
-        <DecorIcon className="z-10" position="bottom-right" />
-        <DecorIcon className="z-10 hidden md:block" position="bottom-left" />
-      </LogoCard>
-
-      <LogoCard
-        className="relative border-b bg-secondary md:bg-background dark:bg-secondary/30 md:dark:bg-background"
-        logo={{
-          src: "https://storage.efferd.com/logo/openai-wordmark.svg",
-          alt: "OpenAI Logo",
-        }}
-      />
-
-      <LogoCard
-        className="relative border-r border-b bg-secondary md:border-b-0 md:bg-background dark:bg-secondary/30 md:dark:bg-background"
-        logo={{
-          src: "https://storage.efferd.com/logo/turso-wordmark.svg",
-          alt: "Turso Logo",
-        }}
-      >
-        <DecorIcon className="z-10 md:hidden" position="bottom-right" />
-      </LogoCard>
-
-      <LogoCard
-        className="border-r"
-        logo={{
-          src: "https://storage.efferd.com/logo/claude-wordmark.svg",
-          alt: "Claude AI Logo",
-        }}
-      />
-
-      <LogoCard
-        className="border-r"
-        logo={{
-          src: "https://storage.efferd.com/logo/claude-wordmark.svg",
-          alt: "Claude AI Logo",
-        }}
-      />
-
-      <LogoCard
-        className="bg-primary-foreground dark:bg-secondary/30"
-        logo={{
-          src: "https://storage.efferd.com/logo/vercel-wordmark.svg",
-          alt: "Vercel Logo",
-        }}
-      />
-    </div>
-  );
-}
-
-type LogoCardProps = React.ComponentProps<"div"> & {
-  logo: Logo;
-};
-
-function LogoCard({ logo, className, children, ...props }: LogoCardProps) {
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-center bg-background px-4 py-8 md:p-8",
-        className,
-      )}
-      {...props}
-    >
-      <img
-        alt={logo.alt}
-        className="pointer-events-none h-4 select-none md:h-5 dark:brightness-0 dark:invert"
-        height="auto"
-        src={logo.src}
-        width="auto"
-      />
-      {children}
+        {logos.map(logo => (
+          <div
+            className="flex h-24 w-40 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-white p-4"
+            key={logo.alt}
+          >
+            <img
+              alt={logo.alt}
+              className="pointer-events-none max-h-14 w-auto max-w-full select-none object-contain"
+              src={logo.src}
+            />
+          </div>
+        ))}
+      </InfiniteSlider>
     </div>
   );
 }

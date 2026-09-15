@@ -55,7 +55,7 @@ const HowItWorks = () => {
               From setup to
               <span className="text-accent"> certification</span>
               <br className="hidden md:block" />
-              in under 10 minutes.
+              {" "}in under 10 minutes.
             </h2>
 
             <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-primary-foreground/70 md:text-lg">
