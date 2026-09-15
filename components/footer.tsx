@@ -149,15 +149,15 @@ const navLinks = [
 const legalLinks = [
   {
     label: "Privacy Policy",
-    href: "https://balotiq.com/privacy",
+    href: "/privacy",
   },
   {
     label: "Terms of Service",
-    href: "https://balotiq.com/terms",
+    href: "/terms",
   },
   {
     label: "Billing & Refunds",
-    href: "https://balotiq.com/billing-policy",
+    href: "/billing-policy",
   },
 ];
 
