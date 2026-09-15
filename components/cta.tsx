@@ -100,7 +100,7 @@ export function CallToAction() {
               >
                 Your next election
                 <br />
-                <span className="text-primary">starts here.</span>
+                <span className="text-primary"> starts here.</span>
               </motion.h2>
 
               <motion.p

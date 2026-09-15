@@ -1,9 +1,8 @@
-import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Footer } from "@/components/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -55,10 +54,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full", "antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
-        <Header />
-
         {children}
-        <Footer />
+        <Analytics />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Portal, PortalBackdrop } from "@/components/portal";
@@ -44,14 +45,14 @@ export function MobileNav() {
 							<Button
 								className="w-full"
 								variant="outline"
-								render={<a href="https://balotiq.com/login" />}
+								render={<Link href="/sign-in" />}
 								nativeButton={false}
 							>
 								Sign In
 							</Button>
 							<Button
 								className="w-full"
-								render={<a href="https://balotiq.com/register" />}
+								render={<Link href="/sign-up" />}
 								nativeButton={false}
 							>
 								Get Started

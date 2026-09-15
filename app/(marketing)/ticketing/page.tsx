@@ -8,7 +8,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DecorIcon } from "@/components/decor-icon";
-import { FullWidthDivider } from "@/components/full-width-divider";
 
 export const metadata: Metadata = {
   title: "Ticketing",
@@ -102,10 +101,6 @@ export default function TicketingPage() {
                 className="relative flex flex-col justify-between gap-6 bg-background px-6 pt-8 pb-6 shadow-xs"
                 key={feature.title}
               >
-                <div className="absolute -inset-y-4 -left-px w-px bg-border" />
-                <div className="absolute -inset-y-4 -right-px w-px bg-border" />
-                <div className="absolute -inset-x-4 -top-px h-px bg-border" />
-                <div className="absolute -right-4 -bottom-px -left-4 h-px bg-border" />
                 <DecorIcon className="size-3.5" position="top-left" />
 
                 <div
@@ -208,8 +203,6 @@ export default function TicketingPage() {
               </Button>
             </div>
           </div>
-
-          <FullWidthDivider contained position="top" />
         </div>
       </section>
     </>

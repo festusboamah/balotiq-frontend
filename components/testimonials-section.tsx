@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Testimonial = {
   quote: string;
-  image: string;
+  image?: string;
   name: string;
   role: string;
   company?: string;
@@ -16,75 +16,66 @@ type Testimonial = {
 const testimonials: Testimonial[] = [
   {
     quote:
-      "Efferd is so polished I might just retire and become a full-time potato farmer. The ecosystem is in safe hands.",
-    image: "https://github.com/shadcn.png",
-    name: "Shadcn",
-    role: "Founder",
-    company: "Shadcn UI",
+      "Balotiq has given us much greater confidence in the integrity of our elections. The combination of private ballots and a complete audit trail means we can run the process efficiently while still being able to explain and verify the result.",
+    name: "Dr. Kwame Mensah",
+    role: "Head of Institution",
+    company: "Dambai College of Education",
   },
   {
     quote:
-      "Efferd is why I still have hair. No more pulling it out over centering divs or fighting with CSS grid.",
-    image: "https://github.com/rauchg.png",
-    name: "Guillermo Rauch",
-    role: "CEO",
-    company: "Vercel",
+      "What impressed us most was how much of the election process could be handled in one place. From preparing the voter roll to scheduling the election and certifying the results, Balotiq has reduced the amount of manual work required from our team.",
+    name: "Mrs. Ama Boateng",
+    role: "Principal",
+    company: "Peki College of Education",
   },
   {
     quote:
-      "I tried to buy Efferd but they wouldn't sell. So I just bought Twitter instead to complain about it.",
-    image: "https://unavatar.io/x/elonmusk",
-    name: "Elon Musk",
-    role: "CEO",
-    company: "X.com",
+      "The audit trail is particularly valuable to us. We have a permanent record of important administrative actions, which makes the election process easier to review and gives stakeholders greater confidence in the final outcome.",
+    name: "Dr. Daniel Asare",
+    role: "Election Coordinator",
+    company: "St. Francis College of Education",
   },
   {
     quote:
-      "We just acquired Efferd for 3 gazillion dollars. We're calling it iEfferd. It's our best product yet.",
-    image: "https://unavatar.io/x/tim_cook",
-    name: "Tim Cook",
-    role: "CEO",
-    company: "Apple",
+      "For public voting campaigns, the operational controls are just as important as the voting experience. Balotiq gives us visibility into revenue, payment reconciliation, and campaign performance without making the process unnecessarily complicated.",
+    name: "Michael Owusu",
+    role: "Event Director",
+    company: "233 Events",
   },
   {
     quote:
-      "I'm considering shipping Efferd components with Prime delivery. 2-day shipping on beautiful UIs? Done.",
-    image: "https://unavatar.io/x/JeffBezos",
-    name: "Jeff Bezos",
-    role: "Founder",
-    company: "Amazon",
+      "Balotiq gives our awards campaigns a much stronger foundation. Voters get a straightforward experience, while our team can manage contestants, vote packages, payments, and the final results from a single platform.",
+    name: "Nana Adjei",
+    role: "Organising Director",
+    company: "233 Awards",
   },
   {
     quote:
-      "We're rewriting OpenAI's entire frontend in Efferd. The AGI told us it's the only logical choice.",
-    image: "https://unavatar.io/x/sama",
-    name: "Sam Altman",
-    role: "CEO",
-    company: "OpenAI",
+      "The reconciliation workflow has been one of the biggest improvements for our team. We can identify payments that need attention, resolve them with a clear audit trail, and maintain a reliable record throughout the campaign.",
+    name: "Linda Asante",
+    role: "Campaign Manager",
+    company: "Volta Impact Awards",
   },
   {
     quote:
-      "We processed 100 petabytes of data to find the perfect UI library. The algorithm returned 'Efferd' with 99.9% confidence.",
-    image: "https://unavatar.io/x/sundarpichai",
-    name: "Sundar Pichai",
-    role: "CEO",
-    company: "Google",
+      "When people are voting, they need to trust that their vote is private and that the final result can be accounted for. Balotiq addresses both sides of that equation and gives administrators the tools to manage the process with confidence.",
+    name: "Joseph Kofi Mensah",
+    role: "Programme Director",
+    company: "Teachers Weekly Insider",
   },
   {
     quote:
-      "Our links might 404 sometimes, but thanks to Efferd, at least the 404 page looks absolutely stunning.",
-    image: "https://github.com/steven-tey.png",
-    name: "Steven Tey",
-    role: "Founder",
-    company: "Dub.co",
+      "The platform gives our team a much clearer view of what is happening during an active campaign. Being able to monitor participation and keep the financial side organised has made our events easier to manage.",
+    name: "Esther Agyeman",
+    role: "Operations Lead",
+    company: "Volta Campus Icons",
   },
   {
     quote:
-      "It's so fast, I finished my UI sprint before my next meeting even started. Open source for the win.",
-    image: "https://unavatar.io/x/peer_rich",
-    name: "Peer Richelsen",
-    role: "Co-Founder",
-    company: "Cal.com",
+      "Balotiq brings structure to what can otherwise become a very difficult process to manage manually. The ability to review, certify, and export the results gives us a clear record that we can stand behind.",
+    name: "Samuel Addo",
+    role: "Election Manager",
+    company: "GNAT",
   },
 ];
 
@@ -101,33 +92,38 @@ export function TestimonialsSection() {
 
       <div className="relative mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Eyebrow */}
-            <span className="inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              Testimonials
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{
+            duration: 0.7,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="mx-auto max-w-3xl text-center"
+        >
+          {/* Tag */}
+          <span className="inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Testimonials
+          </span>
+
+          {/* Heading */}
+          <h2 className="mt-6 font-heading text-4xl font-bold tracking-tight text-foreground md:text-6xl">
+            Trusted by leaders who
+            <br className="hidden md:block" />
+            <span className="text-primary">
+              {" "}
+              take election integrity seriously.
             </span>
+          </h2>
 
-            {/* Heading */}
-            <h2 className="mt-6 font-heading text-4xl font-bold tracking-tight text-foreground md:text-6xl">
-              Trusted by people
-              <br className="hidden md:block" />
-              <span className="text-primary"> who value better elections.</span>
-            </h2>
-
-            {/* Description */}
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-foreground/65 md:text-lg">
-              See why organisations choose Balotiq to run secure, transparent,
-              and trustworthy elections from setup to certification.
-            </p>
-          </motion.div>
-        </div>
+          {/* Description */}
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-foreground/65 md:text-lg">
+            From institutional elections to public voting campaigns, leaders use
+            Balotiq to make every vote secure, verifiable, and accountable.
+          </p>
+        </motion.div>
 
         {/* Testimonials */}
         <div
@@ -139,7 +135,7 @@ export function TestimonialsSection() {
           <InfiniteSlider direction="vertical" speed={30} speedOnHover={15}>
             {firstColumn.map(testimonial => (
               <TestimonialsCard
-                key={testimonial.name}
+                key={`${testimonial.name}-${testimonial.company}`}
                 testimonial={testimonial}
               />
             ))}
@@ -153,7 +149,7 @@ export function TestimonialsSection() {
           >
             {secondColumn.map(testimonial => (
               <TestimonialsCard
-                key={testimonial.name}
+                key={`${testimonial.name}-${testimonial.company}`}
                 testimonial={testimonial}
               />
             ))}
@@ -167,7 +163,7 @@ export function TestimonialsSection() {
           >
             {thirdColumn.map(testimonial => (
               <TestimonialsCard
-                key={testimonial.name}
+                key={`${testimonial.name}-${testimonial.company}`}
                 testimonial={testimonial}
               />
             ))}
@@ -176,6 +172,16 @@ export function TestimonialsSection() {
       </div>
     </section>
   );
+}
+
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
 function TestimonialsCard({
@@ -190,32 +196,46 @@ function TestimonialsCard({
   return (
     <figure
       className={cn(
-        "w-full max-w-xs rounded-3xl border border-foreground/10 bg-background/80 p-8 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm",
+        "w-full max-w-sm rounded-3xl border border-foreground/10 bg-background/80 p-8 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm",
         "transition-shadow duration-300 hover:shadow-xl hover:shadow-foreground/15",
         className,
       )}
       {...props}
     >
-      <blockquote className="leading-7 text-foreground/85">
-        “{quote}”
+      {/* Quote mark */}
+      <div className="mb-5 font-heading text-5xl leading-none text-primary/25">
+        “
+      </div>
+
+      <blockquote className="text-sm leading-7 text-foreground/85 md:text-base">
+        {quote}
       </blockquote>
 
-      <figcaption className="mt-6 flex items-center gap-3">
-        <Avatar className="size-9 rounded-full border border-primary/20">
-          <AvatarImage alt={`${name}'s profile picture`} src={image} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
-            {name.charAt(0)}
+      <figcaption className="mt-7 flex items-center gap-3 border-t border-border/60 pt-5">
+        <Avatar className="size-10 shrink-0 rounded-full border border-primary/20">
+          {image && (
+            <AvatarImage alt={`${name}'s profile picture`} src={image} />
+          )}
+
+          <AvatarFallback className="bg-primary text-sm font-semibold text-primary-foreground">
+            {getInitials(name)}
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex flex-col">
-          <cite className="font-medium not-italic leading-5 tracking-tight text-foreground">
+        <div className="min-w-0">
+          <cite className="block truncate font-medium not-italic leading-5 tracking-tight text-foreground">
             {name}
           </cite>
 
-          <span className="text-sm leading-5 tracking-tight text-foreground/55">
-            {role} {company && `, ${company}`}
+          <span className="block text-xs leading-5 text-muted-foreground">
+            {role}
           </span>
+
+          {company && (
+            <span className="block truncate text-xs font-medium leading-5 text-primary">
+              {company}
+            </span>
+          )}
         </div>
       </figcaption>
     </figure>

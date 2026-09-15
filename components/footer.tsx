@@ -4,18 +4,15 @@ import { cn } from "@/lib/utils";
 // import { InstagramIcon } from "@/components/instagram-icon";
 // import { XIcon } from "@/components/x-icon";
 import { Logo } from "@/components/logo";
-import { FullWidthDivider } from "@/components/full-width-divider";
 
 export function Footer() {
   return (
     <footer
       className={cn(
-        "relative mx-auto max-w-6xl lg:border-x",
+        "relative mx-auto max-w-6xl",
         "dark:bg-[radial-gradient(35%_80%_at_15%_0%,--theme(--color-foreground/.1),transparent)]",
       )}
     >
-      <FullWidthDivider position="top" />
-
       <div className="grid grid-cols-6 gap-6 p-4">
         {/* Brand */}
         <div className="col-span-6 flex flex-col gap-4 pt-5">
@@ -97,8 +94,6 @@ export function Footer() {
           </p>
         </div>
       </div>
-
-      <FullWidthDivider />
 
       <div className="flex flex-col items-center justify-center gap-1.5 py-4 sm:flex-row sm:justify-between sm:px-4">
         <p className="text-center font-light text-muted-foreground text-sm">

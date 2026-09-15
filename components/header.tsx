@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
 import { useScroll } from "@/hooks/use-scroll";
@@ -80,14 +81,14 @@ export function Header() {
           <Button
             size="sm"
             variant="outline"
-            render={<a href="https://balotiq.com/login" />}
+            render={<Link href="/sign-in" />}
             nativeButton={false}
           >
             Sign In
           </Button>
           <Button
             size="sm"
-            render={<a href="https://balotiq.com/register" />}
+            render={<Link href="/sign-up" />}
             nativeButton={false}
           >
             Get Started
