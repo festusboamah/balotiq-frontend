@@ -42,7 +42,7 @@ export function SignUpForm({ onSignUp }: SignUpFormProps) {
   };
 
   return (
-    <div className="mx-auto space-y-4 sm:w-sm">
+    <div className="mx-auto w-full max-w-sm space-y-4">
       <div className="flex flex-col space-y-1">
         <h1 className="font-heading text-2xl font-bold tracking-tight">
           Create your account

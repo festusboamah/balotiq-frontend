@@ -15,8 +15,8 @@ export async function HeroSection() {
     });
 
   return (
-    <section>
-      <div className="relative flex flex-col items-center justify-center gap-5 px-4 py-12 md:px-4 md:py-24 lg:py-28">
+    <section className="w-full min-w-0 overflow-x-clip">
+      <div className="relative flex w-full min-w-0 flex-col items-center justify-center gap-5 px-4 py-12 md:px-4 md:py-24 lg:py-28">
         {/* Ambient shade */}
         <div
           aria-hidden="true"
@@ -51,7 +51,7 @@ export async function HeroSection() {
 
         <h1
           className={cn(
-            "max-w-2xl text-balance text-center text-3xl text-foreground md:text-5xl lg:text-6xl",
+            "w-full max-w-[calc(100vw-2rem)] text-balance text-center text-3xl text-foreground md:max-w-2xl md:text-5xl lg:text-6xl",
             "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-100 duration-500 ease-out font-heading font-bold",
           )}
         >
@@ -60,7 +60,7 @@ export async function HeroSection() {
 
         <p
           className={cn(
-            "max-w-2xl text-center text-muted-foreground text-sm tracking-wider sm:text-lg",
+            "w-full max-w-[calc(100vw-2rem)] text-center text-muted-foreground text-sm tracking-wider sm:max-w-2xl sm:text-lg",
             "fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-200 duration-500 ease-out",
           )}
         >
@@ -69,7 +69,7 @@ export async function HeroSection() {
           instantly, without question.
         </p>
 
-        <div className="fade-in slide-in-from-bottom-10 flex w-fit animate-in items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
+        <div className="fade-in slide-in-from-bottom-10 flex max-w-full flex-wrap items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
           <Button
             variant="outline"
             render={

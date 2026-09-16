@@ -2,12 +2,16 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { createPortal } from "react-dom";
 
+const subscribeToClient = () => () => {};
+
 function Portal({ className, ...props }: React.ComponentProps<"div">) {
-	const [mounted, setMounted] = React.useState(false);
+	const mounted = React.useSyncExternalStore(
+		subscribeToClient,
+		() => true,
+		() => false,
+	);
 
 	React.useEffect(() => {
-		setMounted(true);
-
 		const originalStyle = window.getComputedStyle(document.body).overflow;
 		const scrollbarWidth =
 			window.innerWidth - document.documentElement.clientWidth;
