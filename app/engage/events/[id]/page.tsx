@@ -16,6 +16,7 @@ import type {
   EngageEventResponse,
   EngageFinancialSummaryResponse,
   EngageIntegrityCaseResponse,
+  EngageNominationResponse,
   EngageSettlementResponse,
   EngageSupportCaseResponse,
   EngageVotePackageResponse,
@@ -55,11 +56,13 @@ export default function EngageEventPage() {
   const [pending, setPending] = useState(false);
 
   const [opensAt, setOpensAt] = useState(""); const [closesAt, setClosesAt] = useState("");
+  const [nominationsOpenAt, setNominationsOpenAt] = useState(""); const [nominationsCloseAt, setNominationsCloseAt] = useState("");
   const [categoryName, setCategoryName] = useState("");
   const [contestantCategory, setContestantCategory] = useState(""); const [contestantName, setContestantName] = useState(""); const [contestantBio, setContestantBio] = useState("");
   const [packageName, setPackageName] = useState(""); const [packageAmount, setPackageAmount] = useState(""); const [packageVotes, setPackageVotes] = useState("");
 
   const [financials, setFinancials] = useState<EngageFinancialSummaryResponse | null>(null);
+  const [nominations, setNominations] = useState<EngageNominationResponse[]>([]);
   const [settlement, setSettlement] = useState<EngageSettlementResponse | null>(null);
   const [integrityCases, setIntegrityCases] = useState<EngageIntegrityCaseResponse[]>([]);
   const [supportCases, setSupportCases] = useState<EngageSupportCaseResponse[]>([]);
@@ -79,9 +82,11 @@ export default function EngageEventPage() {
       authGet<EngageContestantResponse[]>(`/api/engage/events/${eventId}/contestants`),
       authGet<EngageVotePackageResponse[]>(`/api/engage/events/${eventId}/vote-packages`),
       authGet<EngageFinancialSummaryResponse>(`/api/engage/events/${eventId}/financial-summary`),
-    ]).then(([record, categoryRows, contestantRows, packageRows, financialSummary]) => {
-      setEvent(record); setCategories(categoryRows); setContestants(contestantRows); setPackages(packageRows); setFinancials(financialSummary);
-      setOpensAt(toLocal(record.opens_at)); setClosesAt(toLocal(record.closes_at)); setDataLoading(false);
+      authGet<EngageNominationResponse[]>(`/api/engage/events/${eventId}/nominations?status=PENDING`),
+    ]).then(([record, categoryRows, contestantRows, packageRows, financialSummary, nominationRows]) => {
+      setEvent(record); setCategories(categoryRows); setContestants(contestantRows); setPackages(packageRows); setFinancials(financialSummary); setNominations(nominationRows);
+      setOpensAt(toLocal(record.opens_at)); setClosesAt(toLocal(record.closes_at));
+      setNominationsOpenAt(toLocal(record.nominations_open_at)); setNominationsCloseAt(toLocal(record.nominations_close_at)); setDataLoading(false);
     }).catch((reason: unknown) => { setError(reason instanceof ApiError ? reason.message : "Unable to load this event."); setDataLoading(false); });
   }, [eventId, loading, user, authGet, reload]);
 
@@ -113,7 +118,7 @@ export default function EngageEventPage() {
 
   const saveSchedule = async (formEvent: FormEvent<HTMLFormElement>) => {
     formEvent.preventDefault(); setPending(true); setError("");
-    try { await authPatch(`/api/engage/events/${eventId}`, { opens_at: toIso(opensAt), closes_at: toIso(closesAt) }); refresh(); }
+    try { await authPatch(`/api/engage/events/${eventId}`, { opens_at: toIso(opensAt), closes_at: toIso(closesAt), nominations_open_at: toIso(nominationsOpenAt), nominations_close_at: toIso(nominationsCloseAt) }); refresh(); }
     catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to save the schedule."); }
     finally { setPending(false); }
   };
@@ -137,6 +142,19 @@ export default function EngageEventPage() {
     try { await authPost(`/api/engage/events/${eventId}/vote-packages`, { name: packageName, amount: packageAmount, vote_quantity: Number(packageVotes) }); setPackageName(""); setPackageAmount(""); setPackageVotes(""); refresh(); }
     catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to add the vote package."); }
     finally { setPending(false); }
+  };
+
+  const approveNomination = async (id: string) => {
+    setError("");
+    try { await authPost(`/api/engage/nominations/${id}/approve`); refresh(); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to approve this nomination."); }
+  };
+
+  const rejectNomination = async (id: string) => {
+    const reason = window.prompt("Reason for rejecting this nomination (at least 10 characters):");
+    if (!reason || reason.trim().length < 10) return;
+    try { await authPost(`/api/engage/nominations/${id}/reject`, { reason: reason.trim() }); refresh(); }
+    catch (reason2) { setError(reason2 instanceof ApiError ? reason2.message : "Unable to reject this nomination."); }
   };
 
   const transition = async (target: string) => {
@@ -218,16 +236,18 @@ export default function EngageEventPage() {
   };
 
   return <WorkspaceShell admin={user.is_super_admin}><main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
-    <header><Link href={`/engage/organisers/${event.organiser_id}`} className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Organiser</Link><div className="mt-2 flex flex-wrap items-start justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold">{event.name}</h1><p className="mt-1 text-sm text-muted-foreground">/{event.slug}</p></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{event.status}</span></div><nav aria-label="Public link" className="mt-3 flex flex-wrap gap-3 text-sm"><Link href={`/engage/vote/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public voting page →</Link></nav></header>
+    <header><Link href={`/engage/organisers/${event.organiser_id}`} className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Organiser</Link><div className="mt-2 flex flex-wrap items-start justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold">{event.name}</h1><p className="mt-1 text-sm text-muted-foreground">/{event.slug}</p></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{event.status}</span></div><nav aria-label="Public links" className="mt-3 flex flex-wrap gap-3 text-sm"><Link href={`/engage/vote/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public voting page →</Link>{event.nominations_open_at && <Link href={`/engage/nominate/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public nomination page →</Link>}</nav></header>
     {error && <p role="alert" className="border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
 
     {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Configuration</h2>{hasConfiguration ? <p className="mt-2 text-sm text-muted-foreground">An approved configuration version is active. Categories, contestants and vote packages can be managed below.</p> : <><p className="mt-2 text-sm text-muted-foreground">Categories, contestants and vote packages can only be added once a configuration version is approved.</p><Button type="button" disabled={pending} className="mt-4" onClick={() => void setUpConfiguration()}>Set up configuration</Button></>}</section>}
 
-    {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Schedule</h2><form onSubmit={saveSchedule} className="mt-4 grid gap-3 sm:grid-cols-2"><div><label htmlFor="opens-at" className="text-sm font-medium">Opens</label><Input id="opens-at" type="datetime-local" value={opensAt} onChange={e => setOpensAt(e.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="closes-at" className="text-sm font-medium">Closes</label><Input id="closes-at" type="datetime-local" value={closesAt} onChange={e => setClosesAt(e.target.value)} className="mt-2 h-11" /></div><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Save schedule</Button></form></section>}
+    {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Schedule</h2><form onSubmit={saveSchedule} className="mt-4 grid gap-3 sm:grid-cols-2"><div><label htmlFor="opens-at" className="text-sm font-medium">Opens</label><Input id="opens-at" type="datetime-local" value={opensAt} onChange={e => setOpensAt(e.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="closes-at" className="text-sm font-medium">Closes</label><Input id="closes-at" type="datetime-local" value={closesAt} onChange={e => setClosesAt(e.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="nominations-open-at" className="text-sm font-medium">Nominations open</label><Input id="nominations-open-at" type="datetime-local" value={nominationsOpenAt} onChange={e => setNominationsOpenAt(e.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="nominations-close-at" className="text-sm font-medium">Nominations close</label><Input id="nominations-close-at" type="datetime-local" value={nominationsCloseAt} onChange={e => setNominationsCloseAt(e.target.value)} className="mt-2 h-11" /></div><p className="text-xs text-muted-foreground sm:col-span-2">Leave both nomination fields blank to keep public nominations closed.</p><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Save schedule</Button></form></section>}
 
     {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Lifecycle</h2><p className="mt-2 text-sm text-muted-foreground">This event moves through configuration, testing, approval, scheduling and going live before closing, certification and settlement. Going LIVE additionally needs opens/closes times, the organiser&apos;s platform fee rate, at least one active contestant and one active vote package.</p><div className="mt-4 flex flex-wrap gap-3">{(NEXT_STAGES[event.status] ?? []).map(stage => <Button key={stage.target} type="button" variant={stage.target === "CLOSED" || stage.target === "CLOSING_RECONCILIATION" ? "destructive" : "default"} disabled={pending} onClick={() => void transition(stage.target)}>{stage.label}</Button>)}</div></section>}
 
     <section aria-labelledby="categories-heading"><h2 id="categories-heading" className="font-heading text-2xl font-bold">Categories</h2><div className="mt-4 space-y-2">{categories.length === 0 ? <p className="text-sm text-muted-foreground">No categories yet.</p> : categories.map(category => <div key={category.id} className="border bg-card p-4 text-sm"><strong>{category.name}</strong><span className="ml-2 text-xs uppercase text-muted-foreground">{category.status}</span></div>)}</div>{canManage && hasConfiguration && <form onSubmit={addCategory} className="mt-4 flex flex-wrap gap-3"><Input aria-label="Category name" required value={categoryName} onChange={e => setCategoryName(e.target.value)} placeholder="e.g. Best Newcomer" className="h-11 flex-1" /><Button type="submit" disabled={pending} variant="outline" className="h-11">Add category</Button></form>}</section>
+
+    {canManage && nominations.length > 0 && <section aria-labelledby="nominations-heading"><h2 id="nominations-heading" className="font-heading text-2xl font-bold">Pending nominations</h2><div className="mt-4 space-y-3">{nominations.map(nomination => <div key={nomination.id} className="flex flex-wrap items-start justify-between gap-3 border bg-card p-4 text-sm"><div><strong>{nomination.nominee_name}</strong>{nomination.nominee_reason && <p className="mt-1 text-xs text-muted-foreground">{nomination.nominee_reason}</p>}<p className="mt-1 text-xs text-muted-foreground">Submitted by {nomination.submitter_name} ({nomination.submitter_email})</p></div><div className="flex shrink-0 gap-2"><Button type="button" size="sm" onClick={() => void approveNomination(nomination.id)}>Approve</Button><Button type="button" size="sm" variant="destructive" onClick={() => void rejectNomination(nomination.id)}>Reject</Button></div></div>)}</div></section>}
 
     <section aria-labelledby="contestants-heading"><h2 id="contestants-heading" className="font-heading text-2xl font-bold">Contestants</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{contestants.length === 0 ? <p className="text-sm text-muted-foreground">No contestants yet.</p> : contestants.map(contestant => <div key={contestant.id} className="border bg-secondary/50 p-4 text-sm"><strong>{contestant.name}</strong><span className="block text-xs text-muted-foreground">{contestant.public_code} · {contestant.status}</span></div>)}</div>{canManage && hasConfiguration && categories.length > 0 && <form onSubmit={addContestant} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-2"><select aria-label="Category" required value={contestantCategory} onChange={e => setContestantCategory(e.target.value)} className="h-11 border bg-background px-3 text-sm"><option value="">Select a category</option>{categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}</select><Input aria-label="Contestant name" required value={contestantName} onChange={e => setContestantName(e.target.value)} placeholder="Contestant name" className="h-11" /><Input aria-label="Contestant bio" value={contestantBio} onChange={e => setContestantBio(e.target.value)} placeholder="Short bio (optional)" className="h-11 sm:col-span-2" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Add contestant</Button></form>}</section>
 
