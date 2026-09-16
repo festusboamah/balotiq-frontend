@@ -9,11 +9,11 @@ export type EngageOrganiserResponse = {
   created_at: string;
 };
 export type EngageEventResponse = { id: string; organiser_id: string; organization_id: string; name: string; slug: string; cover_image_url: string | null; code_prefix: string | null; ussd_code: string | null; open_vote_rate: string | null; status: string; leaderboard_mode: string; countdown_visible: boolean; timezone: string; opens_at: string | null; closes_at: string | null; nominations_open_at: string | null; nominations_close_at: string | null; current_configuration_version_id: string | null; created_at: string; certified_at: string | null; certified_by: string | null; result_hash: string | null; payout_requested_at: string | null; payout_requested_by: string | null };
-export type EngagePublicEventListItem = { id: string; name: string; slug: string; cover_image_url: string | null; status: string; closes_at: string | null; organiser_name: string };
 export type EngagePublicEventResponse = { id: string; name: string; slug: string; cover_image_url: string | null; status: string; timezone: string; opens_at: string | null; closes_at: string | null; nominations_open_at: string | null; nominations_close_at: string | null; leaderboard_mode: string; countdown_visible: boolean; open_vote_rate: string | null };
 export type EngagePublicCategoryResponse = { id: string; name: string; slug: string; display_order: number };
 export type EngagePublicContestantResponse = { id: string; category_id: string; public_code: string; name: string; bio: string | null; photo_url: string | null; status: string; display_order: number };
 export type EngagePublicVotePackageResponse = { id: string; name: string; amount: string; currency: string; vote_quantity: number };
+export type EngagePublicEventListItem = { id: string; name: string; slug: string; cover_image_url: string | null; organiser_name: string; opens_at: string | null; closes_at: string | null };
 export type EngageVoteIntentResponse = { transaction_id: string; reference: string; event_id: string; contestant_id: string; amount: string; currency: string; vote_quantity: number; payment_status: string; authorization_url: string | null };
 export type EngagePaymentStatusResponse = { reference: string; status: string; vote_quantity: number; credited_at: string | null; reconciliation_required: boolean; event_name: string; contestant_name: string; amount: string; currency: string };
 
@@ -28,6 +28,7 @@ export type TicketingEventResponse = { id: string; organiser_id: string; organiz
 export type TicketingTierResponse = { id: string; event_id: string; name: string; description: string | null; amount: string; currency: string; capacity: number | null; status: string; sort_order: number };
 export type TicketingPublicEventResponse = { id: string; name: string; slug: string; description: string | null; venue: string | null; cover_image_url: string | null; currency: string; status: string; timezone: string; event_starts_at: string | null; event_ends_at: string | null };
 export type TicketingPublicTierResponse = { id: string; name: string; description: string | null; amount: string; currency: string; remaining_capacity: number | null };
+export type TicketingPublicEventListItem = { id: string; name: string; slug: string; cover_image_url: string | null; organiser_name: string; venue: string | null; event_starts_at: string | null };
 export type TicketingOrderResponse = { id: string; event_id: string; tier_id: string; quantity: number; unit_amount: string; total_amount: string; currency: string; status: string; internal_reference: string; authorization_url: string | null };
 export type TicketingTicketResponse = { id: string; display_code: string; status: string; qr_data_uri: string | null };
 export type TicketingOrderWithTicketsResponse = { order: TicketingOrderResponse; event_name: string; tier_name: string; tickets: TicketingTicketResponse[] };

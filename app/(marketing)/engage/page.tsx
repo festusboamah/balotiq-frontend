@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   ArrowRightIcon,
   ImagesIcon,
@@ -77,7 +78,7 @@ export default function EngagePage() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button
-              render={<a href="https://balotiq.com/engage/events" />}
+              render={<Link href="/engage/events" />}
               nativeButton={false}
             >
               Explore public events{" "}
@@ -189,14 +190,14 @@ export default function EngagePage() {
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button
-                render={<a href="https://balotiq.com/register" />}
+                render={<a href="/sign-up" />}
                 nativeButton={false}
               >
                 Start an event <ArrowRightIcon data-icon="inline-end" />
               </Button>
               <Button
                 variant="outline"
-                render={<a href="https://balotiq.com/engage/events" />}
+                render={<Link href="/engage/events" />}
                 nativeButton={false}
               >
                 Browse live events

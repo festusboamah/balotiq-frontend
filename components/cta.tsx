@@ -173,7 +173,7 @@ export function CallToAction() {
                 <Button
                   size="lg"
                   className="group h-12 w-full"
-                  render={<a href="https://balotiq.com/register" />}
+                  render={<a href="/sign-up" />}
                   nativeButton={false}
                 >
                   Start Your Election
