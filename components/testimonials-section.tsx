@@ -196,7 +196,7 @@ function TestimonialsCard({
   return (
     <figure
       className={cn(
-        "w-full max-w-sm rounded-3xl border border-foreground/10 bg-background/80 p-8 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm",
+        "w-[min(22rem,calc(100vw-2rem))] max-w-full min-w-0 rounded-3xl border border-foreground/10 bg-background/80 p-6 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm sm:p-8",
         "transition-shadow duration-300 hover:shadow-xl hover:shadow-foreground/15",
         className,
       )}
@@ -207,7 +207,7 @@ function TestimonialsCard({
         “
       </div>
 
-      <blockquote className="text-sm leading-7 text-foreground/85 md:text-base">
+      <blockquote className="min-w-0 wrap-break-word text-sm leading-7 text-foreground/85 md:text-base">
         {quote}
       </blockquote>
 
