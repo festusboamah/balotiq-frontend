@@ -32,7 +32,7 @@ const plans: Plan[] = [
     name: "Governance",
     icon: <Building2Icon />,
     info: "Organisational elections for unions, universities, and associations",
-    price: 50,
+    price: 500,
     priceSuffix: "/election",
     priceNote: "Starting price. Pay once to schedule, not a subscription.",
     features: [
@@ -44,7 +44,7 @@ const plans: Plan[] = [
     ],
     btn: {
       text: "Start your election",
-      href: "https://balotiq.com/register",
+      href: "/sign-up",
     },
   },
   {

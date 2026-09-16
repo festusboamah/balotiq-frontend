@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   ArrowRightIcon,
   LayersIcon,
@@ -76,7 +77,7 @@ export default function TicketingPage() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button
-              render={<a href="https://balotiq.com/register" />}
+              render={<a href="/sign-up" />}
               nativeButton={false}
             >
               Start selling tickets{" "}
@@ -188,7 +189,7 @@ export default function TicketingPage() {
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button
-                render={<a href="https://balotiq.com/register" />}
+                render={<a href="/sign-up" />}
                 nativeButton={false}
               >
                 Start selling tickets{" "}
@@ -196,7 +197,7 @@ export default function TicketingPage() {
               </Button>
               <Button
                 variant="outline"
-                render={<a href="https://balotiq.com/ticketing/events" />}
+                render={<Link href="/ticketing/events" />}
                 nativeButton={false}
               >
                 Browse live events

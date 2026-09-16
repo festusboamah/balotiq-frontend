@@ -78,7 +78,7 @@ export default function GovernancePage() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button
-              render={<a href="https://balotiq.com/register" />}
+              render={<a href="/sign-up" />}
               nativeButton={false}
             >
               Set up your workspace{" "}
@@ -190,7 +190,7 @@ export default function GovernancePage() {
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button
-                render={<a href="https://balotiq.com/register" />}
+                render={<a href="/sign-up" />}
                 nativeButton={false}
               >
                 Start your election{" "}
@@ -198,7 +198,7 @@ export default function GovernancePage() {
               </Button>
               <Button
                 variant="outline"
-                render={<a href="https://balotiq.com/login" />}
+                render={<a href="/sign-in" />}
                 nativeButton={false}
               >
                 Already have an account? Log in
