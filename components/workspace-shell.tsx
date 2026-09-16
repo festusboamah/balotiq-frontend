@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Building2, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Ticket } from "lucide-react";
+import { Building2, KeyRound, LayoutDashboard, LogOut, ShieldCheck, Sparkles, Ticket } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
@@ -11,6 +11,7 @@ const baseItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/engage", label: "Explore Engage", icon: Sparkles },
   { href: "/ticketing", label: "Explore tickets", icon: Ticket },
+  { href: "/sessions", label: "Account security", icon: KeyRound },
 ];
 
 export function WorkspaceShell({ children, admin = false }: { children: ReactNode; admin?: boolean }) {
