@@ -47,6 +47,8 @@ export type EngageIntegrityCaseResponse = { id: string; event_id: string; contes
 export type EngageCaseNoteResponse = { id: string; case_id: string; author_id: string | null; note: string; created_at: string };
 export type EngageSupportCaseResponse = { id: string; event_id: string; transaction_id: string | null; organization_id: string; requester_contact: string; requester_type: string; category: string; priority: string; summary: string; status: string; owner_id: string | null; opened_by: string | null; opened_at: string; resolved_by: string | null; resolved_at: string | null; resolution_note: string | null; created_at: string };
 
+export type DataSubjectRequestResponse = { id: string; user_id: string | null; requester_email: string; request_type: string; status: string; details: string; due_at: string; handled_by: string | null; resolved_at: string | null; resolution_note: string | null; created_at: string };
+
 export type OrganizationResponse = {
   id: string; name: string; slug: string; billing_mode: string;
   flat_fee_amount_override: string | null; status: string;
