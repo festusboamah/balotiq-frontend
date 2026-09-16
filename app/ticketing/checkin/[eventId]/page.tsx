@@ -25,7 +25,7 @@ const BANNER_STYLES: Record<ScanOutcome["kind"], string> = {
 // A tap-to-dismiss result banner, not an auto-clearing timer -- staff at
 // a busy door need to actually see who they just let in (or turned away)
 // before the next scan overwrites it.
-function ResultBanner({ outcome, onDismiss }: { outcome: ScanOutcome; onDismiss: () => void }) {
+function ResultBanner({ outcome, onDismiss, onVoid, onReissue }: { outcome: ScanOutcome; onDismiss: () => void; onVoid: (ticketId: string) => void; onReissue: (ticketId: string) => void }) {
   let heading = ""; let detail = "";
   if (outcome.kind === "success") { heading = "✓ Checked in"; detail = `${outcome.response.tier_name} · ${outcome.response.display_code}`; }
   else if (outcome.kind === "already_used") { heading = "Already checked in"; detail = "This ticket has already been used for entry."; }
@@ -33,11 +33,12 @@ function ResultBanner({ outcome, onDismiss }: { outcome: ScanOutcome; onDismiss:
   else if (outcome.kind === "not_found") { heading = "Not a valid ticket"; detail = "That QR code doesn't match a ticket for this event."; }
   else { heading = "Something went wrong"; detail = outcome.message; }
 
-  return <button type="button" onClick={onDismiss} className={`w-full cursor-pointer border p-4 text-left ${BANNER_STYLES[outcome.kind]}`}>
+  return <div role="button" tabIndex={0} onClick={onDismiss} onKeyDown={event => { if (event.key === "Enter") onDismiss(); }} className={`w-full cursor-pointer border p-4 text-left ${BANNER_STYLES[outcome.kind]}`}>
     <p className="font-heading text-xl font-bold">{heading}</p>
     {detail && <p className="mt-1 text-sm opacity-80">{detail}</p>}
+    {outcome.kind === "success" && <div className="mt-3 flex gap-3" onClick={event => event.stopPropagation()}><button type="button" onClick={() => onVoid(outcome.response.ticket_id)} className="cursor-pointer text-xs font-semibold underline">Void this ticket</button><button type="button" onClick={() => onReissue(outcome.response.ticket_id)} className="cursor-pointer text-xs font-semibold underline">Reissue</button></div>}
     <p className="mt-2 text-xs opacity-60">Tap to scan the next ticket</p>
-  </button>;
+  </div>;
 }
 
 export default function TicketingCheckInPage() {
@@ -82,13 +83,27 @@ export default function TicketingCheckInPage() {
 
   function resumeScanning() { setOutcome(null); busyRef.current = false; }
 
+  const voidTicket = async (ticketId: string) => {
+    const reason = window.prompt("Reason for voiding this ticket (at least 10 characters):");
+    if (!reason || reason.trim().length < 10) return;
+    try { await authPost(`/api/ticketing/tickets/${ticketId}/void`, { reason: reason.trim() }); resumeScanning(); }
+    catch (reason2) { setOutcome({ kind: "error", message: reason2 instanceof ApiError ? reason2.message : "Unable to void this ticket." }); }
+  };
+
+  const reissueTicket = async (ticketId: string) => {
+    const reason = window.prompt("Reason for reissuing this ticket (at least 10 characters):");
+    if (!reason || reason.trim().length < 10) return;
+    try { await authPost(`/api/ticketing/tickets/${ticketId}/reissue`, { reason: reason.trim() }); resumeScanning(); }
+    catch (reason2) { setOutcome({ kind: "error", message: reason2 instanceof ApiError ? reason2.message : "Unable to reissue this ticket." }); }
+  };
+
   if (loading || !user) return <main className="grid min-h-screen place-items-center"><p className="text-sm text-muted-foreground">Loading…</p></main>;
   if (loadError) return <main className="grid min-h-screen place-items-center px-4"><p role="alert" className="text-sm text-destructive">{loadError}</p></main>;
   if (!event) return <main className="grid min-h-screen place-items-center"><p className="text-sm text-muted-foreground">Loading…</p></main>;
 
   return <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 p-6">
     <div><p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Check-in</p><h1 className="mt-1 font-heading text-xl font-bold">{event.name}</h1></div>
-    {outcome ? <ResultBanner outcome={outcome} onDismiss={resumeScanning} /> : <div className="overflow-hidden border bg-card"><video ref={videoRef} className="aspect-square w-full object-cover" muted playsInline /></div>}
+    {outcome ? <ResultBanner outcome={outcome} onDismiss={resumeScanning} onVoid={id => void voidTicket(id)} onReissue={id => void reissueTicket(id)} /> : <div className="overflow-hidden border bg-card"><video ref={videoRef} className="aspect-square w-full object-cover" muted playsInline /></div>}
     {scannerError && <p role="alert" className="text-sm text-destructive">{scannerError}</p>}
     {!outcome && <p className="text-center text-xs text-muted-foreground">Point the camera at a ticket&apos;s QR code.</p>}
   </main>;
