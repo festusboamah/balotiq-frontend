@@ -4,14 +4,10 @@ import { useEffect, useState, type FormEvent } from "react";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { API_URL, apiGet, ApiError } from "@/lib/api-client";
+import { apiGet, ApiError } from "@/lib/api-client";
+import { resolveSiteImageUrl } from "@/lib/site-images";
 import type { SiteImageResponse } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
-
-// An admin-uploaded replacement is a backend-served /uploads/... path and
-// needs the API's own origin; a seeded default is a path expected to be
-// bundled with the frontend build, so it stays relative as-is.
-const resolveSiteImageUrl = (url: string) => (url.startsWith("/uploads/") ? `${API_URL}${url}` : url);
 
 export default function AdminSiteImagesPage() {
   const { user, loading, authPost } = useRequireAuth();

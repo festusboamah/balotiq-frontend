@@ -1,8 +1,19 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, PhoneCallIcon } from "lucide-react";
+import { GhanaStoriesCarousel } from "@/components/ghana-stories-carousel";
+import { apiGet, ApiError } from "@/lib/api-client";
+import { buildSiteImageMap, SITE_IMAGE_DEFAULTS } from "@/lib/site-images";
+import type { SiteImageResponse } from "@/lib/types";
 
-export function HeroSection() {
+export async function HeroSection() {
+  const siteImages = await apiGet<SiteImageResponse[]>("/api/v1/public/site-images")
+    .then(buildSiteImageMap)
+    .catch((reason: unknown) => {
+      if (!(reason instanceof ApiError)) console.error(reason);
+      return SITE_IMAGE_DEFAULTS;
+    });
+
   return (
     <section>
       <div className="relative flex flex-col items-center justify-center gap-5 px-4 py-12 md:px-4 md:py-24 lg:py-28">
@@ -68,25 +79,12 @@ export function HeroSection() {
           >
             <PhoneCallIcon data-icon="inline-start" /> Request A Demo
           </Button>
-          <Button
-            render={<a href="https://balotiq.com/register" />}
-            nativeButton={false}
-          >
+          <Button render={<a href="/sign-up" />} nativeButton={false}>
             Get started <ArrowRightIcon data-icon="inline-end" />
           </Button>
         </div>
       </div>
-      <div className="relative">
-        <div className="overflow-hidden *:pointer-events-none *:aspect-video *:select-none">
-          <img
-            alt="light app screen"
-            className="dark:hidden"
-            height="auto"
-            src="https://storage.efferd.com/screen/dashboard-light.webp"
-            width="auto"
-          />
-        </div>
-      </div>
+      <GhanaStoriesCarousel images={siteImages} />
     </section>
   );
 }

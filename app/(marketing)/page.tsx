@@ -8,6 +8,13 @@ import { PricingSection } from "@/components/pricing-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { Button } from "@/components/ui/button";
 
+// The hero fetches site-images (editable via /admin/site-images) at
+// render time -- without revalidation, an edit there would never appear
+// on the live homepage without a full redeploy, defeating the point of
+// a CMS. 5 minutes is a reasonable staleness window for occasional
+// content tweaks, not real-time editing.
+export const revalidate = 300;
+
 export default function Home() {
   return (
     <>
