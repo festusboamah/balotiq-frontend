@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { InfiniteSlider } from "@/components/infinite-slider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Testimonial = {
@@ -79,13 +78,9 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const firstColumn = testimonials.slice(0, 3);
-const secondColumn = testimonials.slice(3, 6);
-const thirdColumn = testimonials.slice(6, 9);
-
 export function TestimonialsSection() {
   return (
-    <section className="relative w-full overflow-hidden bg-muted px-4 py-24 md:px-8 md:py-32">
+    <section id="testimonials" className="relative w-full overflow-hidden bg-muted px-4 py-24 md:px-8 md:py-32">
       {/* Decorative background */}
       <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-background/30 blur-3xl" />
@@ -126,48 +121,13 @@ export function TestimonialsSection() {
         </motion.div>
 
         {/* Testimonials */}
-        <div
-          className={cn(
-            "relative mx-auto mt-20 flex max-h-160 max-w-5xl justify-center gap-6 overflow-hidden",
-            "mask-[linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]",
-          )}
-        >
-          <InfiniteSlider direction="vertical" speed={30} speedOnHover={15}>
-            {firstColumn.map(testimonial => (
-              <TestimonialsCard
-                key={`${testimonial.name}-${testimonial.company}`}
-                testimonial={testimonial}
-              />
-            ))}
-          </InfiniteSlider>
-
-          <InfiniteSlider
-            className="hidden md:block"
-            direction="vertical"
-            speed={50}
-            speedOnHover={25}
-          >
-            {secondColumn.map(testimonial => (
-              <TestimonialsCard
-                key={`${testimonial.name}-${testimonial.company}`}
-                testimonial={testimonial}
-              />
-            ))}
-          </InfiniteSlider>
-
-          <InfiniteSlider
-            className="hidden lg:block"
-            direction="vertical"
-            speed={35}
-            speedOnHover={17}
-          >
-            {thirdColumn.map(testimonial => (
-              <TestimonialsCard
-                key={`${testimonial.name}-${testimonial.company}`}
-                testimonial={testimonial}
-              />
-            ))}
-          </InfiniteSlider>
+        <div className="mx-auto mt-20 grid max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map(testimonial => (
+            <TestimonialsCard
+              key={`${testimonial.name}-${testimonial.company}`}
+              testimonial={testimonial}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -196,7 +156,7 @@ function TestimonialsCard({
   return (
     <figure
       className={cn(
-        "w-[min(22rem,calc(100vw-2rem))] max-w-full min-w-0 rounded-3xl border border-foreground/10 bg-background/80 p-6 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm sm:p-8",
+        "flex h-full min-w-0 flex-col rounded-3xl border border-foreground/10 bg-background/80 p-6 text-foreground shadow-lg shadow-foreground/10 backdrop-blur-sm sm:p-8",
         "transition-shadow duration-300 hover:shadow-xl hover:shadow-foreground/15",
         className,
       )}
@@ -207,7 +167,7 @@ function TestimonialsCard({
         “
       </div>
 
-      <blockquote className="min-w-0 wrap-break-word text-sm leading-7 text-foreground/85 md:text-base">
+      <blockquote className="min-w-0 flex-1 wrap-break-word text-sm leading-7 text-foreground/85 md:text-base">
         {quote}
       </blockquote>
 
