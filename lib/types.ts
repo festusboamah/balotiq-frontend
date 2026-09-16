@@ -40,6 +40,13 @@ export type MfaStatusResponse = { enabled: boolean; backup_codes_remaining: numb
 export type MfaEnrollResponse = { secret: string; qr_code_data_uri: string };
 export type MfaConfirmResponse = { backup_codes: string[] };
 
+export type EngageSettlementResponse = { id: string; event_id: string; organization_id: string; status: string; platform_fee_rate: string; gross_verified_value: string; excluded_refunded_amount: string; balotiq_fee: string; organiser_net: string; calculated_at: string; calculated_by: string | null; approved_at: string | null };
+export type EngageFinancialSummaryResponse = { event_name: string; event_status: string; gross_verified_value: string; excluded_refunded_amount: string; balotiq_fee: string | null; organiser_net: string | null; settlement_status: string; payout_requested_at: string | null; payout_requested_by: string | null };
+export type EngageReconciliationPaymentResponse = { id: string; event_id: string; organization_id: string; contestant_id: string; category_id: string; internal_reference: string; amount: string; currency: string; vote_quantity: number; status: string; reconciliation_reason: string | null; provider_verified_at: string | null; created_at: string; reconciled_by: string | null; reconciled_at: string | null };
+export type EngageIntegrityCaseResponse = { id: string; event_id: string; contestant_id: string | null; organization_id: string; status: string; severity: string; trigger: string; summary: string; opened_by: string | null; opened_at: string; closed_by: string | null; closed_at: string | null; outcome: string | null; created_at: string };
+export type EngageCaseNoteResponse = { id: string; case_id: string; author_id: string | null; note: string; created_at: string };
+export type EngageSupportCaseResponse = { id: string; event_id: string; transaction_id: string | null; organization_id: string; requester_contact: string; requester_type: string; category: string; priority: string; summary: string; status: string; owner_id: string | null; opened_by: string | null; opened_at: string; resolved_by: string | null; resolved_at: string | null; resolution_note: string | null; created_at: string };
+
 export type OrganizationResponse = {
   id: string; name: string; slug: string; billing_mode: string;
   flat_fee_amount_override: string | null; status: string;
