@@ -5,8 +5,8 @@ import { Particles } from "@/components/ui/particles";
 
 const AuthLayout = ({ children }: LayoutProps<"/">) => {
   return (
-    <div className="relative w-full md:h-screen md:overflow-hidden">
-      <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-8">
+    <div className="relative w-full min-w-0 md:h-screen md:overflow-hidden">
+      <div className="relative mx-auto flex min-h-screen w-full min-w-0 max-w-5xl flex-col justify-center px-8">
         <Button
           className="absolute top-4 left-4"
           variant="ghost"

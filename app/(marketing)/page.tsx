@@ -1,12 +1,10 @@
 import { CallToAction } from "@/components/cta";
 import { FeatureSection } from "@/components/feature-section";
-import { Header } from "@/components/header";
 import { HeroSection } from "@/components/hero";
 import HowItWorks from "@/components/home/how-it-works";
 import { LogosSection } from "@/components/logos-section";
 import { PricingSection } from "@/components/pricing-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
-import { Button } from "@/components/ui/button";
 
 // The hero fetches site-images (editable via /admin/site-images) at
 // render time -- without revalidation, an edit there would never appear

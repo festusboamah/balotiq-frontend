@@ -52,9 +52,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", "font-sans", inter.variable)}
+      data-scroll-behavior="smooth"
+      className={cn("h-full w-full max-w-full overflow-x-hidden", "antialiased", "font-sans", inter.variable)}
     >
-      <body className="min-h-full flex flex-col overflow-x-hidden">
+      <body className="flex min-h-full w-full max-w-full flex-col overflow-x-hidden">
         <AuthProvider>{children}</AuthProvider>
         <Analytics />
       </body>
