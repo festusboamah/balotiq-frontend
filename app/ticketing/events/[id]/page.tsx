@@ -8,7 +8,7 @@ import { WorkspaceShell } from "@/components/workspace-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ApiError } from "@/lib/api-client";
-import type { TicketingEventResponse, TicketingTierResponse } from "@/lib/types";
+import type { TicketingEventResponse, TicketingSalesSummaryResponse, TicketingTierResponse } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
 const toIso = (value: string) => (value ? new Date(value).toISOString() : null);
@@ -19,6 +19,7 @@ export default function TicketingEventPage() {
   const { user, loading, authGet, authPost, authPatch } = useRequireAuth();
   const [event, setEvent] = useState<TicketingEventResponse | null>(null);
   const [tiers, setTiers] = useState<TicketingTierResponse[]>([]);
+  const [sales, setSales] = useState<TicketingSalesSummaryResponse | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
@@ -32,8 +33,9 @@ export default function TicketingEventPage() {
     void Promise.all([
       authGet<TicketingEventResponse>(`/api/ticketing/events/${eventId}`),
       authGet<TicketingTierResponse[]>(`/api/ticketing/events/${eventId}/tiers`),
-    ]).then(([record, rows]) => {
-      setEvent(record); setTiers(rows);
+      authGet<TicketingSalesSummaryResponse>(`/api/ticketing/events/${eventId}/sales-summary`),
+    ]).then(([record, rows, salesSummary]) => {
+      setEvent(record); setTiers(rows); setSales(salesSummary);
       setStartsAt(toLocal(record.event_starts_at)); setEndsAt(toLocal(record.event_ends_at)); setDataLoading(false);
     }).catch((reason: unknown) => { setError(reason instanceof ApiError ? reason.message : "Unable to load this event."); setDataLoading(false); });
   }, [eventId, loading, user, authGet, reload]);
@@ -72,6 +74,8 @@ export default function TicketingEventPage() {
     {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Schedule</h2><form onSubmit={saveSchedule} className="mt-4 grid gap-3 sm:grid-cols-2"><div><label htmlFor="starts-at" className="text-sm font-medium">Starts</label><Input id="starts-at" type="datetime-local" value={startsAt} onChange={e => setStartsAt(e.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="ends-at" className="text-sm font-medium">Ends</label><Input id="ends-at" type="datetime-local" value={endsAt} onChange={e => setEndsAt(e.target.value)} className="mt-2 h-11" /></div><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Save schedule</Button></form></section>}
 
     {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Lifecycle</h2><p className="mt-2 text-sm text-muted-foreground">Publishing needs the organiser&apos;s platform fee rate set, the agreement accepted, and at least one active ticket tier.</p><div className="mt-4 flex flex-wrap gap-3">{event.status === "DRAFT" && <Button type="button" disabled={pending} onClick={() => void transition("PUBLISHED")}>Publish</Button>}{event.status === "PUBLISHED" && <Button type="button" variant="destructive" disabled={pending} onClick={() => void transition("CLOSED")}>Close event</Button>}</div></section>}
+
+    {canManage && sales && <section aria-labelledby="sales-heading"><h2 id="sales-heading" className="font-heading text-2xl font-bold">Sales summary</h2><div className="mt-4 grid gap-3 sm:grid-cols-3"><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Gross sales</span><strong className="mt-1 block text-xl">{sales.currency} {sales.gross_sales}</strong></div><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Tickets issued</span><strong className="mt-1 block text-xl">{sales.tickets_issued}</strong></div><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Checked in</span><strong className="mt-1 block text-xl">{sales.tickets_checked_in}</strong></div></div></section>}
 
     <section aria-labelledby="tiers-heading"><h2 id="tiers-heading" className="font-heading text-2xl font-bold">Ticket tiers</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{tiers.length === 0 ? <p className="text-sm text-muted-foreground">No ticket tiers yet.</p> : tiers.map(tier => <div key={tier.id} className="border bg-secondary/50 p-4 text-sm"><strong>{tier.name}</strong><span className="block text-xs text-muted-foreground">{tier.currency} {tier.amount}{tier.capacity ? ` · ${tier.capacity} available` : ""} · {tier.status}</span></div>)}</div>{canManage && <form onSubmit={addTier} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-3"><Input aria-label="Tier name" required value={tierName} onChange={e => setTierName(e.target.value)} placeholder="e.g. Regular" className="h-11" /><Input aria-label="Amount" required type="number" min="0" step="0.01" value={tierAmount} onChange={e => setTierAmount(e.target.value)} placeholder="Amount (GHS)" className="h-11" /><Input aria-label="Capacity" type="number" min="1" value={tierCapacity} onChange={e => setTierCapacity(e.target.value)} placeholder="Capacity (optional)" className="h-11" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-3">Add tier</Button></form>}</section>
   </main></WorkspaceShell>;
