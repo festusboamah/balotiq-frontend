@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { ArrowLeft } from "lucide-react";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +43,7 @@ export default function EditSitePage() {
   };
 
   return <WorkspaceShell admin={user.is_super_admin}><main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10">
-    <header><h1 className="font-heading text-3xl font-bold">/{page.slug}</h1></header>
+    <header><Link href="/admin/pages" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Site content</Link><h1 className="mt-2 font-heading text-3xl font-bold">/{page.slug}</h1></header>
     {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
     {message && <p role="status" className="text-sm text-muted-foreground">{message}</p>}
     <form onSubmit={save} className="space-y-4 border bg-card p-5">

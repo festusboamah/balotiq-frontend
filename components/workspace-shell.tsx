@@ -21,13 +21,10 @@ export function WorkspaceShell({ children, admin = false }: { children: ReactNod
 
   return (
     <div className="min-h-screen bg-muted lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
-      <aside className="sticky top-0 z-40 border-b border-white/10 bg-sidebar px-4 py-5 text-sidebar-foreground lg:h-screen lg:border-r lg:border-b-0 lg:px-5 lg:py-7">
-        <div className="flex items-center justify-between gap-3 px-2">
-          <div className="flex min-w-0 items-center gap-3">
-            <span className="grid size-10 shrink-0 place-items-center border border-sidebar-foreground/20 bg-sidebar-foreground/5"><ShieldCheck className="size-5 text-sidebar-primary" aria-hidden="true" /></span>
-            <div className="min-w-0"><strong className="block text-sm">Balotiq workspace</strong><span className="block truncate text-xs text-sidebar-foreground/60">{admin ? "Platform administration" : "Your account"}</span></div>
-          </div>
-          <button type="button" onClick={async () => { await logout(); router.replace("/sign-in"); }} aria-label="Sign out" className="grid size-9 shrink-0 cursor-pointer place-items-center text-sidebar-foreground/70 transition-colors hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring lg:hidden"><LogOut className="size-4" aria-hidden="true" /></button>
+      <aside className="border-b border-white/10 bg-sidebar px-4 py-5 text-sidebar-foreground lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0 lg:px-5 lg:py-7">
+        <div className="flex items-center gap-3 px-2">
+          <span className="grid size-10 place-items-center border border-sidebar-foreground/20 bg-sidebar-foreground/5"><ShieldCheck className="size-5 text-sidebar-primary" aria-hidden="true" /></span>
+          <div><strong className="block text-sm">Balotiq workspace</strong><span className="text-xs text-sidebar-foreground/60">{admin ? "Platform administration" : "Your account"}</span></div>
         </div>
 
         <nav aria-label="Workspace navigation" className="mt-5 flex gap-2 overflow-x-auto pb-1 lg:mt-8 lg:flex-col lg:overflow-visible">
@@ -37,7 +34,7 @@ export function WorkspaceShell({ children, admin = false }: { children: ReactNod
           })}
         </nav>
 
-        <div className="mt-5 hidden border-t border-sidebar-foreground/15 pt-4 lg:block lg:mt-auto lg:absolute lg:inset-x-5 lg:bottom-7">
+        <div className="mt-5 border-t border-sidebar-foreground/15 pt-4 lg:mt-auto lg:absolute lg:inset-x-5 lg:bottom-7">
           <button type="button" onClick={async () => { await logout(); router.replace("/sign-in"); }} className="flex min-h-11 w-full cursor-pointer items-center gap-3 px-3 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"><LogOut className="size-4" aria-hidden="true" />Sign out</button>
         </div>
       </aside>
