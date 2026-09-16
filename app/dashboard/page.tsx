@@ -60,6 +60,8 @@ export default function DashboardPage() {
               <WorkspaceCard icon={Sparkles} href="/engage/reconciliation" title="Engage reconciliation" detail="Stuck payments and refunds" badge="Admin" />
               <WorkspaceCard icon={Building2} href="/admin/organizations" title="All organisations" detail="Platform-wide overview" badge="Admin" />
               <WorkspaceCard icon={ShieldCheck} href="/admin/data-requests" title="Data requests" detail="Access, correction, deletion" badge="Admin" />
+              <WorkspaceCard icon={Building2} href="/admin/pages" title="Site content" detail="Edit page text" badge="Admin" />
+              <WorkspaceCard icon={Building2} href="/admin/site-images" title="Site images" detail="Replace homepage images" badge="Admin" />
             </div>
           </section>
         )}
