@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowLeft, Ticket } from "lucide-react";
+import { Ticket } from "lucide-react";
 import { WorkspaceCard, WorkspaceShell } from "@/components/workspace-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ export default function TicketingOrganiserPage() {
   };
 
   return <WorkspaceShell admin={user.is_super_admin}><main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
-    <header><Link href="/dashboard" className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Dashboard</Link><div className="mt-2 flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Ticketing organiser</p><h1 className="mt-1 font-heading text-3xl font-bold">{organiser.display_name}</h1></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{organiser.status}</span></div></header>
+    <header><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Ticketing organiser</p><h1 className="mt-1 font-heading text-3xl font-bold">{organiser.display_name}</h1></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{organiser.status}</span></div></header>
     {pageError && <p role="alert" className="text-sm text-destructive">{pageError}</p>}
 
     {canManage && !organiser.agreement_accepted_at && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Organiser agreement</h2><p className="mt-2 text-sm text-muted-foreground">The Ticketing organiser agreement must be accepted before this organiser can publish an event.</p><Button type="button" disabled={pending} className="mt-4" onClick={() => void acceptAgreement()}>Accept agreement</Button></section>}

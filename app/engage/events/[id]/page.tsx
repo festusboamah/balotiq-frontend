@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowLeft } from "lucide-react";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -252,7 +251,7 @@ export default function EngageEventPage() {
   };
 
   return <WorkspaceShell admin={user.is_super_admin}><main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
-    <header><Link href={`/engage/organisers/${event.organiser_id}`} className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Organiser</Link><div className="mt-2 flex flex-wrap items-start justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold">{event.name}</h1><p className="mt-1 text-sm text-muted-foreground">/{event.slug}</p></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{event.status}</span></div><nav aria-label="Public links" className="mt-3 flex flex-wrap gap-3 text-sm"><Link href={`/engage/vote/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public voting page →</Link>{event.nominations_open_at && <Link href={`/engage/nominate/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public nomination page →</Link>}</nav></header>
+    <header><div className="flex flex-wrap items-start justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold">{event.name}</h1><p className="mt-1 text-sm text-muted-foreground">/{event.slug}</p></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{event.status}</span></div><nav aria-label="Public links" className="mt-3 flex flex-wrap gap-3 text-sm"><Link href={`/engage/vote/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public voting page →</Link>{event.nominations_open_at && <Link href={`/engage/nominate/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public nomination page →</Link>}</nav></header>
     {error && <p role="alert" className="border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
 
     {canManage && <section className="border bg-card p-5"><h2 className="font-heading text-xl font-bold">Configuration</h2>{hasConfiguration ? <p className="mt-2 text-sm text-muted-foreground">An approved configuration version is active. Categories, contestants and vote packages can be managed below.</p> : <><p className="mt-2 text-sm text-muted-foreground">Categories, contestants and vote packages can only be added once a configuration version is approved.</p><Button type="button" disabled={pending} className="mt-4" onClick={() => void setUpConfiguration()}>Set up configuration</Button></>}</section>}
