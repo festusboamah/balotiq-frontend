@@ -52,6 +52,9 @@ export type DataSubjectRequestResponse = { id: string; user_id: string | null; r
 export type SitePageResponse = { slug: string; title: string; body: string; updated_at: string };
 export type SiteImageResponse = { slug: string; image_url: string; alt_text: string; updated_at: string };
 
+export type EngageNominationResponse = { id: string; event_id: string; category_id: string; nominee_name: string; nominee_reason: string | null; photo_url: string | null; nominee_contact_email: string | null; nominee_contact_phone: string | null; submitter_name: string; submitter_email: string; submitter_phone: string | null; status: string; rejection_reason: string | null; reviewed_by: string | null; reviewed_at: string | null; resulting_contestant_id: string | null; created_at: string };
+export type EngagePublicNominationReceiptResponse = { id: string };
+
 export type OrganizationResponse = {
   id: string; name: string; slug: string; billing_mode: string;
   flat_fee_amount_override: string | null; status: string;
