@@ -8,13 +8,14 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
 type SignUpFormProps = {
-  onSignUp?: (email: string, password: string) => Promise<void>;
+  onSignUp?: (email: string, password: string, termsAccepted: boolean) => Promise<void>;
 };
 
 export function SignUpForm({ onSignUp }: SignUpFormProps) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState("");
 
@@ -30,7 +31,7 @@ export function SignUpForm({ onSignUp }: SignUpFormProps) {
       setIsSubmitting(true);
       setError("");
 
-      await onSignUp?.(email, password);
+      await onSignUp?.(email, password, termsAccepted);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : "Unable to create your account.",
@@ -119,12 +120,19 @@ export function SignUpForm({ onSignUp }: SignUpFormProps) {
               <p className="text-sm font-medium text-destructive">{error}</p>
             )}
 
+            <Field>
+              <label className="flex items-start gap-3 text-sm leading-6">
+                <input type="checkbox" checked={termsAccepted} onChange={event => setTermsAccepted(event.target.checked)} required className="mt-1 size-4 accent-primary" />
+                <span>I agree to the <Link href="/terms" className="font-medium text-primary underline">Terms of Service</Link> and <Link href="/privacy" className="font-medium text-primary underline">Privacy Policy</Link>.</span>
+              </label>
+            </Field>
+
             {/* Submit */}
             <Field>
               <Button
                 type="submit"
                 className="h-11 w-full cursor-pointer"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !termsAccepted}
               >
                 {isSubmitting ? "Creating account..." : "Create Account"}
               </Button>
