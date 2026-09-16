@@ -13,12 +13,19 @@ import {
   TicketIcon,
 } from "lucide-react";
 
+type Tier = {
+  label: string;
+  range: string;
+  price: number;
+};
+
 type Plan = {
   name: string;
   icon: React.ReactNode;
   info: string;
-  price: number | string;
+  price?: number | string;
   priceSuffix?: string;
+  tiers?: Tier[];
   priceNote: string;
   features: string[];
   btn: {
@@ -27,14 +34,20 @@ type Plan = {
   };
 };
 
+const formatGHS = (amount: number) => `GHS ${amount.toLocaleString("en-GH")}`;
+
 const plans: Plan[] = [
   {
     name: "Governance",
     icon: <Building2Icon />,
     info: "Organisational elections for unions, universities, and associations",
-    price: 500,
-    priceSuffix: "/election",
-    priceNote: "Starting price. Pay once to schedule, not a subscription.",
+    tiers: [
+      { label: "Starter", range: "up to 100 voters", price: 500 },
+      { label: "Growth", range: "101–500 voters", price: 900 },
+      { label: "Established", range: "501–2,000 voters", price: 1300 },
+    ],
+    priceNote:
+      "Per election. Pay once to schedule, not a subscription. Over 2,000 voters: contact us.",
     features: [
       "Voter roll import & eligibility verification",
       "Positions, candidates, and self-nomination",
@@ -210,26 +223,47 @@ export function PricingCard({
         </p>
 
         {/* Price */}
-        <h3 className="mt-7 mb-1 flex w-max items-end gap-1">
-          {typeof plan.price === "number" ? (
-            <NumberFlow
-              className="font-heading font-extrabold text-4xl tracking-tight text-foreground [&::part(suffix)]:font-normal [&::part(suffix)]:text-sm [&::part(suffix)]:text-muted-foreground"
-              format={{
-                style: "currency",
-                currency: "GHS",
-                notation: "compact",
-              }}
-              suffix={plan.priceSuffix}
-              value={plan.price}
-            />
-          ) : (
-            <span className="font-heading font-extrabold text-4xl tracking-tight text-foreground">
-              {plan.price}
-            </span>
-          )}
-        </h3>
+        {plan.tiers ? (
+          <div className="mt-7 mb-1 space-y-2">
+            {plan.tiers.map(tier => (
+              <div
+                key={tier.label}
+                className="flex items-baseline justify-between gap-3"
+              >
+                <span className="text-sm text-foreground/75">
+                  {tier.label}{" "}
+                  <span className="text-muted-foreground">
+                    ({tier.range})
+                  </span>
+                </span>
+                <span className="shrink-0 font-heading font-bold text-foreground">
+                  {formatGHS(tier.price)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <h3 className="mt-7 mb-1 flex w-max items-end gap-1">
+            {typeof plan.price === "number" ? (
+              <NumberFlow
+                className="font-heading font-extrabold text-4xl tracking-tight text-foreground [&::part(suffix)]:font-normal [&::part(suffix)]:text-sm [&::part(suffix)]:text-muted-foreground"
+                format={{
+                  style: "currency",
+                  currency: "GHS",
+                  notation: "compact",
+                }}
+                suffix={plan.priceSuffix}
+                value={plan.price}
+              />
+            ) : (
+              <span className="font-heading font-extrabold text-4xl tracking-tight text-foreground">
+                {plan.price}
+              </span>
+            )}
+          </h3>
+        )}
 
-        <p className="font-normal text-muted-foreground text-xs">
+        <p className="mt-3 font-normal text-muted-foreground text-xs">
           {plan.priceNote}
         </p>
       </div>
