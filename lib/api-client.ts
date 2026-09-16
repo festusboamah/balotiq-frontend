@@ -19,11 +19,13 @@ export type RequestOptions = {
   // refresh_token cookie — every other request is authenticated purely by
   // the bearer access token, so this defaults to off.
   withCredentials?: boolean;
+  headers?: Record<string, string>;
 };
 
 function _buildHeaders(options: RequestOptions): Record<string, string> {
-  const headers: Record<string, string> = {};
-  if (options.body !== undefined) {
+  const headers: Record<string, string> = { ...options.headers };
+  const isFormData = options.body instanceof FormData;
+  if (options.body !== undefined && !isFormData) {
     headers["Content-Type"] = "application/json";
   }
   if (options.accessToken) {
@@ -33,12 +35,23 @@ function _buildHeaders(options: RequestOptions): Record<string, string> {
 }
 
 async function _fetchRaw(path: string, options: RequestOptions): Promise<Response> {
+  const isFormData = options.body instanceof FormData;
   return fetch(`${API_URL}${path}`, {
     method: options.method ?? "GET",
     headers: _buildHeaders(options),
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+    body: isFormData
+      ? (options.body as FormData)
+      : options.body !== undefined
+        ? JSON.stringify(options.body)
+        : undefined,
     credentials: options.withCredentials ? "include" : "same-origin",
   });
+}
+
+async function apiRequestBlob(path: string, options: RequestOptions = {}): Promise<Blob> {
+  const response = await _fetchRaw(path, options);
+  if (!response.ok) return _throwApiError(path, response);
+  return response.blob();
 }
 
 // The backend's error envelope is always {error: {code, message, details}}
@@ -75,6 +88,27 @@ export function apiGet<T>(path: string, options?: RequestOptions): Promise<T> {
   return apiRequest<T>(path, { ...options, method: "GET" });
 }
 
+export function apiGetBlob(path: string, options?: RequestOptions): Promise<Blob> {
+  return apiRequestBlob(path, { ...options, method: "GET" });
+}
+
+export function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export function apiPost<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
   return apiRequest<T>(path, { ...options, method: "POST", body });
+}
+
+export function apiPatch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+  return apiRequest<T>(path, { ...options, method: "PATCH", body });
+}
+
+export function apiDelete<T>(path: string, options?: RequestOptions): Promise<T> {
+  return apiRequest<T>(path, { ...options, method: "DELETE" });
 }
