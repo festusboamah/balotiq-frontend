@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiGet, apiPost, ApiError } from "@/lib/api-client";
+import { resolveSiteImageUrl } from "@/lib/site-images";
 import type {
   EngagePublicCategoryResponse,
   EngagePublicContestantResponse,
@@ -59,7 +60,7 @@ export default function PublicEngageVotePage() {
   };
 
   return <main className="mx-auto min-h-screen w-full max-w-3xl px-4 py-10 sm:px-6">
-    <header>{event.cover_image_url && <img src={event.cover_image_url} alt="" className="mb-6 h-48 w-full object-cover" />}<h1 className="font-heading text-3xl font-bold">{event.name}</h1>{event.closes_at && event.countdown_visible && <p className="mt-2 text-sm text-muted-foreground">Voting closes {new Date(event.closes_at).toLocaleString()}</p>}</header>
+    <header>{event.cover_image_url && <img src={resolveSiteImageUrl(event.cover_image_url)} alt="" className="mb-6 h-48 w-full object-cover" />}<h1 className="font-heading text-3xl font-bold">{event.name}</h1>{event.closes_at && event.countdown_visible && <p className="mt-2 text-sm text-muted-foreground">Voting closes {new Date(event.closes_at).toLocaleString()}</p>}</header>
     {error && <p role="alert" className="mt-4 border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
 
     {!selected && <div className="mt-8 space-y-8">{categories.map(category => <section key={category.id}><h2 className="font-heading text-xl font-bold">{category.name}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{contestants.filter(item => item.category_id === category.id).map(contestant => <button key={contestant.id} type="button" onClick={() => setSelected(contestant)} className="flex cursor-pointer items-center gap-3 border bg-card p-4 text-left transition-colors hover:bg-secondary/60"><span className="min-w-0"><strong className="block truncate text-sm">{contestant.name}</strong><span className="block text-xs text-muted-foreground">{contestant.public_code}</span>{contestant.bio && <span className="mt-1 block line-clamp-2 text-xs text-muted-foreground">{contestant.bio}</span>}</span></button>)}</div></section>)}</div>}

@@ -5,6 +5,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiGet, apiPost, ApiError } from "@/lib/api-client";
+import { resolveSiteImageUrl } from "@/lib/site-images";
 import type { TicketingOrderResponse, TicketingPublicEventResponse, TicketingPublicTierResponse } from "@/lib/types";
 
 export default function PublicTicketingBuyPage() {
@@ -40,7 +41,7 @@ export default function PublicTicketingBuyPage() {
   };
 
   return <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-10 sm:px-6">
-    <header>{event.cover_image_url && <img src={event.cover_image_url} alt="" className="mb-6 h-48 w-full object-cover" />}<h1 className="font-heading text-3xl font-bold">{event.name}</h1>{event.venue && <p className="mt-1 text-sm text-muted-foreground">{event.venue}</p>}{event.event_starts_at && <p className="mt-1 text-sm text-muted-foreground">{new Date(event.event_starts_at).toLocaleString()}</p>}{event.description && <p className="mt-4 text-sm leading-6 text-muted-foreground">{event.description}</p>}</header>
+    <header>{event.cover_image_url && <img src={resolveSiteImageUrl(event.cover_image_url)} alt="" className="mb-6 h-48 w-full object-cover" />}<h1 className="font-heading text-3xl font-bold">{event.name}</h1>{event.venue && <p className="mt-1 text-sm text-muted-foreground">{event.venue}</p>}{event.event_starts_at && <p className="mt-1 text-sm text-muted-foreground">{new Date(event.event_starts_at).toLocaleString()}</p>}{event.description && <p className="mt-4 text-sm leading-6 text-muted-foreground">{event.description}</p>}</header>
     {error && <p role="alert" className="mt-4 border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
 
     <section className="mt-8"><h2 className="font-heading text-xl font-bold">Choose a ticket</h2><div className="mt-4 space-y-3">{tiers.map(tier => {
