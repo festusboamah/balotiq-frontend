@@ -55,7 +55,8 @@ export default function DashboardPage() {
               <WorkspaceCard icon={Building2} href="/organizations/new" title="New organisation" detail="Provision a tenant workspace" badge="Admin" />
               <WorkspaceCard icon={Sparkles} href="/engage/organisers/new" title="New Engage organiser" detail="Events and organiser controls" badge="Admin" />
               <WorkspaceCard icon={Ticket} href="/ticketing/organisers/new" title="New Ticketing organiser" detail="Events, tiers and check-in" badge="Admin" />
-              <WorkspaceCard icon={ShieldCheck} title="Audit evidence" detail="Sensitive platform activity — coming soon" badge="Admin" />
+              <WorkspaceCard icon={ShieldCheck} href="/admin/audit-events" title="Audit evidence" detail="Sensitive platform activity" badge="Admin" />
+              <WorkspaceCard icon={ShieldCheck} href="/admin/super-admins" title="Super Admins" detail="Promote or remove platform access" badge="Admin" />
             </div>
           </section>
         )}

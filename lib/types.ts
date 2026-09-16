@@ -33,6 +33,13 @@ export type TicketingTicketResponse = { id: string; display_code: string; status
 export type TicketingOrderWithTicketsResponse = { order: TicketingOrderResponse; event_name: string; tier_name: string; tickets: TicketingTicketResponse[] };
 export type TicketingCheckInResponse = { ticket_id: string; display_code: string; tier_name: string; checked_in_at: string };
 
+export type SuperAdminResponse = { id: string; email: string; created_at: string };
+export type AuditEventResponse = { id: string; occurred_at: string; actor_user_id: string | null; organization_id: string | null; action: string; target_type: string; target_id: string | null; correlation_id: string | null; reason: string | null; detail: Record<string, unknown> | null };
+export type SessionResponse = { id: string; created_at: string; expires_at: string; is_current: boolean };
+export type MfaStatusResponse = { enabled: boolean; backup_codes_remaining: number };
+export type MfaEnrollResponse = { secret: string; qr_code_data_uri: string };
+export type MfaConfirmResponse = { backup_codes: string[] };
+
 export type OrganizationResponse = {
   id: string; name: string; slug: string; billing_mode: string;
   flat_fee_amount_override: string | null; status: string;
