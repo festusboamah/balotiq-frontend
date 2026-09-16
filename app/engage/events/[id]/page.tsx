@@ -9,10 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ApiError } from "@/lib/api-client";
 import type {
+  EngageCaseNoteResponse,
   EngageCategoryResponse,
   EngageConfigurationVersionResponse,
   EngageContestantResponse,
   EngageEventResponse,
+  EngageFinancialSummaryResponse,
+  EngageIntegrityCaseResponse,
+  EngageSettlementResponse,
+  EngageSupportCaseResponse,
   EngageVotePackageResponse,
 } from "@/lib/types";
 import { useRequireAuth } from "@/lib/use-require-auth";
@@ -54,6 +59,18 @@ export default function EngageEventPage() {
   const [contestantCategory, setContestantCategory] = useState(""); const [contestantName, setContestantName] = useState(""); const [contestantBio, setContestantBio] = useState("");
   const [packageName, setPackageName] = useState(""); const [packageAmount, setPackageAmount] = useState(""); const [packageVotes, setPackageVotes] = useState("");
 
+  const [financials, setFinancials] = useState<EngageFinancialSummaryResponse | null>(null);
+  const [settlement, setSettlement] = useState<EngageSettlementResponse | null>(null);
+  const [integrityCases, setIntegrityCases] = useState<EngageIntegrityCaseResponse[]>([]);
+  const [supportCases, setSupportCases] = useState<EngageSupportCaseResponse[]>([]);
+  const [caseNotes, setCaseNotes] = useState<Record<string, EngageCaseNoteResponse[]>>({});
+  const [openNoteInput, setOpenNoteInput] = useState<Record<string, string>>({});
+  const [payoutReference, setPayoutReference] = useState(""); const [settlementNote, setSettlementNote] = useState("");
+  const [integritySeverity, setIntegritySeverity] = useState<"LOW" | "MEDIUM" | "HIGH" | "CRITICAL">("MEDIUM");
+  const [integrityTrigger, setIntegrityTrigger] = useState(""); const [integritySummary, setIntegritySummary] = useState("");
+  const [supportContact, setSupportContact] = useState(""); const [supportCategory, setSupportCategory] = useState<"PAYMENT" | "VOTE" | "REFUND" | "RESULT" | "ACCOUNT" | "OTHER">("PAYMENT");
+  const [supportPriority, setSupportPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM"); const [supportSummary, setSupportSummary] = useState("");
+
   useEffect(() => {
     if (loading || !user) return;
     void Promise.all([
@@ -61,10 +78,20 @@ export default function EngageEventPage() {
       authGet<EngageCategoryResponse[]>(`/api/engage/events/${eventId}/categories`),
       authGet<EngageContestantResponse[]>(`/api/engage/events/${eventId}/contestants`),
       authGet<EngageVotePackageResponse[]>(`/api/engage/events/${eventId}/vote-packages`),
-    ]).then(([record, categoryRows, contestantRows, packageRows]) => {
-      setEvent(record); setCategories(categoryRows); setContestants(contestantRows); setPackages(packageRows);
+      authGet<EngageFinancialSummaryResponse>(`/api/engage/events/${eventId}/financial-summary`),
+    ]).then(([record, categoryRows, contestantRows, packageRows, financialSummary]) => {
+      setEvent(record); setCategories(categoryRows); setContestants(contestantRows); setPackages(packageRows); setFinancials(financialSummary);
       setOpensAt(toLocal(record.opens_at)); setClosesAt(toLocal(record.closes_at)); setDataLoading(false);
     }).catch((reason: unknown) => { setError(reason instanceof ApiError ? reason.message : "Unable to load this event."); setDataLoading(false); });
+  }, [eventId, loading, user, authGet, reload]);
+
+  useEffect(() => {
+    if (loading || !user || !user.is_super_admin) return;
+    authGet<EngageSettlementResponse>(`/api/engage/events/${eventId}/settlement`).then(setSettlement).catch(() => setSettlement(null));
+    void Promise.all([
+      authGet<EngageIntegrityCaseResponse[]>(`/api/engage/events/${eventId}/integrity-cases`),
+      authGet<EngageSupportCaseResponse[]>(`/api/engage/events/${eventId}/support-cases`),
+    ]).then(([integrityRows, supportRows]) => { setIntegrityCases(integrityRows); setSupportCases(supportRows); }).catch(() => {});
   }, [eventId, loading, user, authGet, reload]);
 
   if (loading || !user || dataLoading) return <main className="grid min-h-screen place-items-center"><p className="text-sm text-muted-foreground">Loading event…</p></main>;
@@ -126,6 +153,70 @@ export default function EngageEventPage() {
     finally { setPending(false); }
   };
 
+  const calculateSettlement = async () => {
+    setPending(true); setError("");
+    try { setSettlement(await authPost<EngageSettlementResponse>(`/api/engage/events/${eventId}/settlement/calculate`)); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to calculate settlement."); }
+    finally { setPending(false); }
+  };
+
+  const approveSettlement = async () => {
+    if (settlementNote.trim().length < 10) { setError("A settlement note of at least 10 characters is required to approve."); return; }
+    setPending(true); setError("");
+    try { setSettlement(await authPost<EngageSettlementResponse>(`/api/engage/events/${eventId}/settlement/approve`, { note: settlementNote.trim() })); setSettlementNote(""); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to approve settlement."); }
+    finally { setPending(false); }
+  };
+
+  const markSettlementPaid = async () => {
+    if (!payoutReference.trim() || settlementNote.trim().length < 10) { setError("A payout reference and a note of at least 10 characters are required."); return; }
+    setPending(true); setError("");
+    try { setSettlement(await authPost<EngageSettlementResponse>(`/api/engage/events/${eventId}/settlement/mark-paid`, { payout_reference: payoutReference.trim(), note: settlementNote.trim() })); setPayoutReference(""); setSettlementNote(""); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to mark settlement paid."); }
+    finally { setPending(false); }
+  };
+
+  const openIntegrityCase = async (formEvent: FormEvent<HTMLFormElement>) => {
+    formEvent.preventDefault(); setPending(true); setError("");
+    try { await authPost(`/api/engage/events/${eventId}/integrity-cases`, { severity: integritySeverity, trigger: integrityTrigger, summary: integritySummary }); setIntegrityTrigger(""); setIntegritySummary(""); refresh(); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to open this case."); }
+    finally { setPending(false); }
+  };
+
+  const closeIntegrityCase = async (caseId: string) => {
+    const outcome = window.prompt("Outcome — one of CONFIRMED_ABUSE, INCONCLUSIVE, LEGITIMATE, DEFECT, OTHER:");
+    if (!outcome) return;
+    try { await authPost(`/api/engage/integrity-cases/${caseId}/close`, { outcome: outcome.toUpperCase() }); refresh(); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to close this case."); }
+  };
+
+  const openSupportCase = async (formEvent: FormEvent<HTMLFormElement>) => {
+    formEvent.preventDefault(); setPending(true); setError("");
+    try { await authPost(`/api/engage/events/${eventId}/support-cases`, { requester_contact: supportContact, requester_type: "VOTER", category: supportCategory, priority: supportPriority, summary: supportSummary }); setSupportContact(""); setSupportSummary(""); refresh(); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to open this case."); }
+    finally { setPending(false); }
+  };
+
+  const resolveSupportCase = async (caseId: string) => {
+    const note = window.prompt("Resolution note (at least 10 characters):");
+    if (!note || note.trim().length < 10) return;
+    try { await authPost(`/api/engage/support-cases/${caseId}/resolve`, { resolution_note: note.trim() }); refresh(); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to resolve this case."); }
+  };
+
+  const toggleNotes = async (kind: "integrity-cases" | "support-cases", caseId: string) => {
+    if (caseNotes[caseId]) { setCaseNotes(previous => { const next = { ...previous }; delete next[caseId]; return next; }); return; }
+    try { setCaseNotes(previous => ({ ...previous, [caseId]: [] })); const notes = await authGet<EngageCaseNoteResponse[]>(`/api/engage/${kind}/${caseId}/notes`); setCaseNotes(previous => ({ ...previous, [caseId]: notes })); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to load notes."); }
+  };
+
+  const addNote = async (kind: "integrity-cases" | "support-cases", caseId: string) => {
+    const note = openNoteInput[caseId];
+    if (!note || !note.trim()) return;
+    try { await authPost(`/api/engage/${kind}/${caseId}/notes`, { note: note.trim() }); setOpenNoteInput(previous => ({ ...previous, [caseId]: "" })); const notes = await authGet<EngageCaseNoteResponse[]>(`/api/engage/${kind}/${caseId}/notes`); setCaseNotes(previous => ({ ...previous, [caseId]: notes })); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : "Unable to add note."); }
+  };
+
   return <WorkspaceShell admin={user.is_super_admin}><main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
     <header><Link href={`/engage/organisers/${event.organiser_id}`} className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" aria-hidden="true" />Organiser</Link><div className="mt-2 flex flex-wrap items-start justify-between gap-4"><div><h1 className="font-heading text-3xl font-bold">{event.name}</h1><p className="mt-1 text-sm text-muted-foreground">/{event.slug}</p></div><span className="border bg-secondary px-3 py-1.5 text-xs font-semibold uppercase tracking-wide">{event.status}</span></div><nav aria-label="Public link" className="mt-3 flex flex-wrap gap-3 text-sm"><Link href={`/engage/vote/${event.slug}`} className="text-primary underline-offset-4 hover:underline">Public voting page →</Link></nav></header>
     {error && <p role="alert" className="border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{error}</p>}
@@ -141,5 +232,29 @@ export default function EngageEventPage() {
     <section aria-labelledby="contestants-heading"><h2 id="contestants-heading" className="font-heading text-2xl font-bold">Contestants</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{contestants.length === 0 ? <p className="text-sm text-muted-foreground">No contestants yet.</p> : contestants.map(contestant => <div key={contestant.id} className="border bg-secondary/50 p-4 text-sm"><strong>{contestant.name}</strong><span className="block text-xs text-muted-foreground">{contestant.public_code} · {contestant.status}</span></div>)}</div>{canManage && hasConfiguration && categories.length > 0 && <form onSubmit={addContestant} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-2"><select aria-label="Category" required value={contestantCategory} onChange={e => setContestantCategory(e.target.value)} className="h-11 border bg-background px-3 text-sm"><option value="">Select a category</option>{categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}</select><Input aria-label="Contestant name" required value={contestantName} onChange={e => setContestantName(e.target.value)} placeholder="Contestant name" className="h-11" /><Input aria-label="Contestant bio" value={contestantBio} onChange={e => setContestantBio(e.target.value)} placeholder="Short bio (optional)" className="h-11 sm:col-span-2" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Add contestant</Button></form>}</section>
 
     <section aria-labelledby="packages-heading"><h2 id="packages-heading" className="font-heading text-2xl font-bold">Vote packages</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{packages.length === 0 ? <p className="text-sm text-muted-foreground">No vote packages yet.</p> : packages.map(item => <div key={item.id} className="border bg-secondary/50 p-4 text-sm"><strong>{item.name}</strong><span className="block text-xs text-muted-foreground">{item.currency} {item.amount} · {item.vote_quantity} vote(s)</span></div>)}</div>{canManage && hasConfiguration && <form onSubmit={addPackage} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-3"><Input aria-label="Package name" required value={packageName} onChange={e => setPackageName(e.target.value)} placeholder="Package name" className="h-11" /><Input aria-label="Amount" required type="number" min="0" step="0.01" value={packageAmount} onChange={e => setPackageAmount(e.target.value)} placeholder="Amount (GHS)" className="h-11" /><Input aria-label="Vote quantity" required type="number" min="1" value={packageVotes} onChange={e => setPackageVotes(e.target.value)} placeholder="Votes" className="h-11" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-3">Add package</Button></form>}</section>
+
+    {canManage && financials && <section aria-labelledby="financials-heading"><h2 id="financials-heading" className="font-heading text-2xl font-bold">Financial summary</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Gross verified</span><strong className="mt-1 block text-xl">GHS {financials.gross_verified_value}</strong></div><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Refunded (excluded)</span><strong className="mt-1 block text-xl">GHS {financials.excluded_refunded_amount}</strong></div><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Balotiq fee</span><strong className="mt-1 block text-xl">{financials.balotiq_fee ? `GHS ${financials.balotiq_fee}` : "—"}</strong></div><div className="border bg-card p-4"><span className="text-xs uppercase text-muted-foreground">Organiser net</span><strong className="mt-1 block text-xl">{financials.organiser_net ? `GHS ${financials.organiser_net}` : "—"}</strong></div></div><p className="mt-2 text-xs text-muted-foreground">Settlement status: {financials.settlement_status}</p></section>}
+
+    {user.is_super_admin && ["CLOSED", "CERTIFIED", "SETTLED"].includes(event.status) && <section aria-labelledby="settlement-heading" className="border bg-card p-5"><h2 id="settlement-heading" className="font-heading text-xl font-bold">Settlement</h2>
+      {!settlement ? <Button type="button" disabled={pending} className="mt-4" onClick={() => void calculateSettlement()}>Calculate settlement</Button> : <div className="mt-4 space-y-4">
+        <p className="text-sm">Status: <strong>{settlement.status}</strong> · Balotiq fee GHS {settlement.balotiq_fee} · Organiser net GHS {settlement.organiser_net}</p>
+        {settlement.status === "DRAFT" && <div className="space-y-3"><p className="text-xs text-muted-foreground">The admin who calculated this settlement cannot also approve it — a different Super Admin must approve.</p><div><label htmlFor="settlement-note" className="text-sm font-medium">Approval note</label><Input id="settlement-note" value={settlementNote} onChange={event => setSettlementNote(event.target.value)} className="mt-2 h-11" placeholder="Minimum 10 characters" /></div><Button type="button" disabled={pending} onClick={() => void approveSettlement()}>Approve settlement</Button></div>}
+        {settlement.status === "APPROVED" && <div className="space-y-3"><div><label htmlFor="payout-ref" className="text-sm font-medium">Payout reference</label><Input id="payout-ref" value={payoutReference} onChange={event => setPayoutReference(event.target.value)} className="mt-2 h-11" /></div><div><label htmlFor="payout-note" className="text-sm font-medium">Note</label><Input id="payout-note" value={settlementNote} onChange={event => setSettlementNote(event.target.value)} className="mt-2 h-11" placeholder="Minimum 10 characters" /></div><Button type="button" disabled={pending} onClick={() => void markSettlementPaid()}>Mark paid</Button></div>}
+      </div>}
+    </section>}
+
+    {user.is_super_admin && <section aria-labelledby="integrity-heading"><h2 id="integrity-heading" className="font-heading text-2xl font-bold">Integrity cases</h2><div className="mt-4 space-y-3">{integrityCases.length === 0 ? <p className="text-sm text-muted-foreground">No integrity cases.</p> : integrityCases.map(item => <div key={item.id} className="border bg-card p-4 text-sm"><div className="flex flex-wrap items-start justify-between gap-3"><div><strong>{item.trigger}</strong><span className="ml-2 text-xs uppercase text-muted-foreground">{item.severity} · {item.status}</span><p className="mt-1 text-xs text-muted-foreground">{item.summary}</p>{item.outcome && <p className="mt-1 text-xs text-muted-foreground">Outcome: {item.outcome}</p>}</div>{item.status !== "CLOSED" && <button type="button" onClick={() => void closeIntegrityCase(item.id)} className="min-h-11 shrink-0 cursor-pointer px-2 text-xs font-semibold text-destructive hover:underline">Close</button>}</div>
+      <button type="button" onClick={() => void toggleNotes("integrity-cases", item.id)} className="mt-2 cursor-pointer text-xs text-primary underline-offset-4 hover:underline">{caseNotes[item.id] ? "Hide notes" : "View notes"}</button>
+      {caseNotes[item.id] && <div className="mt-2 space-y-2 border-t pt-2">{caseNotes[item.id].map(note => <p key={note.id} className="text-xs text-muted-foreground">{note.note}</p>)}<div className="flex gap-2"><Input aria-label="Add note" value={openNoteInput[item.id] ?? ""} onChange={event => setOpenNoteInput(previous => ({ ...previous, [item.id]: event.target.value }))} className="h-9 flex-1 text-xs" /><Button type="button" size="sm" variant="outline" onClick={() => void addNote("integrity-cases", item.id)}>Add</Button></div></div>}
+    </div>)}</div>
+      <form onSubmit={openIntegrityCase} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-2"><select aria-label="Severity" value={integritySeverity} onChange={e => setIntegritySeverity(e.target.value as typeof integritySeverity)} className="h-11 border bg-background px-3 text-sm"><option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option><option value="CRITICAL">Critical</option></select><Input aria-label="Trigger" required value={integrityTrigger} onChange={e => setIntegrityTrigger(e.target.value)} placeholder="Trigger" className="h-11" /><Input aria-label="Integrity case summary" required minLength={10} value={integritySummary} onChange={e => setIntegritySummary(e.target.value)} placeholder="Summary (minimum 10 characters)" className="h-11 sm:col-span-2" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Open integrity case</Button></form>
+    </section>}
+
+    {user.is_super_admin && <section aria-labelledby="support-heading"><h2 id="support-heading" className="font-heading text-2xl font-bold">Support cases</h2><div className="mt-4 space-y-3">{supportCases.length === 0 ? <p className="text-sm text-muted-foreground">No support cases.</p> : supportCases.map(item => <div key={item.id} className="border bg-card p-4 text-sm"><div className="flex flex-wrap items-start justify-between gap-3"><div><strong>{item.category}</strong><span className="ml-2 text-xs uppercase text-muted-foreground">{item.priority} · {item.status}</span><p className="mt-1 text-xs text-muted-foreground">{item.summary}</p><p className="mt-1 text-xs text-muted-foreground">{item.requester_contact}</p></div>{item.status !== "RESOLVED" && <button type="button" onClick={() => void resolveSupportCase(item.id)} className="min-h-11 shrink-0 cursor-pointer px-2 text-xs font-semibold text-primary hover:underline">Resolve</button>}</div>
+      <button type="button" onClick={() => void toggleNotes("support-cases", item.id)} className="mt-2 cursor-pointer text-xs text-primary underline-offset-4 hover:underline">{caseNotes[item.id] ? "Hide notes" : "View notes"}</button>
+      {caseNotes[item.id] && <div className="mt-2 space-y-2 border-t pt-2">{caseNotes[item.id].map(note => <p key={note.id} className="text-xs text-muted-foreground">{note.note}</p>)}<div className="flex gap-2"><Input aria-label="Add note" value={openNoteInput[item.id] ?? ""} onChange={event => setOpenNoteInput(previous => ({ ...previous, [item.id]: event.target.value }))} className="h-9 flex-1 text-xs" /><Button type="button" size="sm" variant="outline" onClick={() => void addNote("support-cases", item.id)}>Add</Button></div></div>}
+    </div>)}</div>
+      <form onSubmit={openSupportCase} className="mt-4 grid gap-3 border-t pt-4 sm:grid-cols-2"><Input aria-label="Requester contact" required value={supportContact} onChange={e => setSupportContact(e.target.value)} placeholder="Requester email or phone" className="h-11" /><select aria-label="Support case category" value={supportCategory} onChange={e => setSupportCategory(e.target.value as typeof supportCategory)} className="h-11 border bg-background px-3 text-sm"><option value="PAYMENT">Payment</option><option value="VOTE">Vote</option><option value="REFUND">Refund</option><option value="RESULT">Result</option><option value="ACCOUNT">Account</option><option value="OTHER">Other</option></select><select aria-label="Priority" value={supportPriority} onChange={e => setSupportPriority(e.target.value as typeof supportPriority)} className="h-11 border bg-background px-3 text-sm"><option value="LOW">Low</option><option value="MEDIUM">Medium</option><option value="HIGH">High</option><option value="URGENT">Urgent</option></select><Input aria-label="Support case summary" required minLength={10} value={supportSummary} onChange={e => setSupportSummary(e.target.value)} placeholder="Summary (minimum 10 characters)" className="h-11" /><Button type="submit" disabled={pending} variant="outline" className="h-11 sm:col-span-2">Open support case</Button></form>
+    </section>}
   </main></WorkspaceShell>;
 }
