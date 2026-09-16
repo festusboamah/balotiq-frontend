@@ -55,6 +55,7 @@ export type SiteImageResponse = { slug: string; image_url: string; alt_text: str
 export type EngageNominationResponse = { id: string; event_id: string; category_id: string; nominee_name: string; nominee_reason: string | null; photo_url: string | null; nominee_contact_email: string | null; nominee_contact_phone: string | null; submitter_name: string; submitter_email: string; submitter_phone: string | null; status: string; rejection_reason: string | null; reviewed_by: string | null; reviewed_at: string | null; resulting_contestant_id: string | null; created_at: string };
 export type EngagePublicNominationReceiptResponse = { id: string };
 export type EngageSearchHitResponse = { type: string; id: string; label: string; event_id: string | null };
+export type TicketingSalesSummaryResponse = { gross_sales: string; currency: string; tickets_issued: number; tickets_checked_in: number };
 
 export type OrganizationResponse = {
   id: string; name: string; slug: string; billing_mode: string;
